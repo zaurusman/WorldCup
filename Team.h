@@ -10,19 +10,26 @@
 #include "Player.h"
 #include <memory>
 class Team {
-    private:
-        unsigned int id;
-        AVL<int, Player> players;
-        int numberOfPlayers;
-        int teamPower;
-        int gamesPlayed;
-        unsigned int topScorerId;
-        char* topScorerName;
-        bool hasGoalkeeper;
-        bool isEmpty;
+    int team_id;
+    int points;
+    AVL<int, Player> players;
+    int number_of_players;
+    int total_goals;
+    int total_cards;
+    int games_played;
+    int top_scorer_id;
+    char* top_scorer_name;
+    bool has_goalkeeper;
 
-    public:
-    Team() = default;
+public:
+    Team(int team_id, int points);
+
+    int is_empty();
+
+    int get_team_power();
+
+    int get_games_played();
+
 };
 
 
