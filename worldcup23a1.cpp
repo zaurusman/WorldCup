@@ -2,30 +2,32 @@
 world_cup_t::world_cup_t():teamsTree(AVL<int,Team>(int(),Team()))
 {}
 
-world_cup_t::~world_cup_t()
+world_cup_t::~world_cup_t() {}//are all necessary destructors being called?
+
+StatusType world_cup_t::add_team(int teamId, int points)//add allocation error traetment
 {
-
-
-    static void clear_aux(std::shared_ptr<_Node>& root) {
-        if(!root) {
-            return;
-        }
-        clear_aux(root->left);
-        clear_aux(root->right);
-        root.reset();
+    if(teamId<=0||points<0)
+        return StatusType::INVALID_INPUT;
+    try {
+        teamsTree.insert(teamId, Team(teamId, points));
+    }catch(const std::exception& e) {
+        if (e.what() =="Key already exists")
+            return  StatusType::FAILURE;
     }
-    teamsTree.clear();
-        }
-
-StatusType world_cup_t::add_team(int teamId, int points)
-{
-	// TODO: Your code goes here
 	return StatusType::SUCCESS;
 }
 
-StatusType world_cup_t::remove_team(int teamId)
+StatusType world_cup_t::remove_team(int teamId)//add allocation error traetment
 {
-	// TODO: Your code goes here
+    try {
+        if (teamsTree.find(teamId).PlayersTree.height != 0) {//PlayersTree need to be added to team.
+            teamsTree.remove(teamId);
+            return StatusType::SUCCESS;
+        }
+    }catch (const std::exception& e){
+        if (e.what() =="Key already exists")
+            return  StatusType::FAILURE;
+    }
 	return StatusType::FAILURE;
 }
 

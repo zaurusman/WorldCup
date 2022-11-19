@@ -20,6 +20,7 @@
 #include "Team.h"
 #include "Player.h"
 #include <memory>
+#include <exception>
 using namespace std;
 class world_cup_t {
 private:
