@@ -9,6 +9,8 @@
 #include "AVLTree.h"
 #include "Player.h"
 #include <memory>
+
+class Player;
 class Team {
     int team_id;
     int points;

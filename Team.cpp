@@ -8,7 +8,6 @@ Team::Team(int team_id, int points):
         team_id(team_id),
         points(points),
         players()
-        // how to initialize players?
 {}
 
 bool Team::is_empty() {

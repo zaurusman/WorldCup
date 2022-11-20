@@ -10,14 +10,12 @@ Player::Player(int player_id, int team_id, int games_played, int goals, int card
     games_played(games_played),
     goals(goals),
     cards(cards),
-    goalkeeper(goalkeeper)
-{
-    his_team = nullptr;
-    games_team_played_without = 0;
-    closest_player_id = -1;
-    closest_player_goals = -1;
-    closest_player_cards = -1;
-}
+    goalkeeper(goalkeeper),
+    his_team(nullptr),
+    games_team_played_without(0),
+    next_closest(nullptr),
+    prev_closest(nullptr)
+{}
 
 
 int Player::get_games_played() {

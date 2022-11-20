@@ -7,6 +7,7 @@
 
 #include "Team.h"
 
+class Team;
 class Player {
     int player_id;
     int team_id;
@@ -16,12 +17,11 @@ class Player {
     bool goalkeeper;
     Team* his_team;
     int games_team_played_without;
-    int closest_player_id;
-    int closest_player_goals;
-    int closest_player_cards;
+    Player* next_closest;
+    Player* prev_closest;
 
 public:
-    Player(int player_id,int team_id,int games_played,int goals,int cards,bool goalkeeper);
+    Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper);
 
     int get_games_played();
 };
