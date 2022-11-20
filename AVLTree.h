@@ -383,6 +383,13 @@ public:
         return height(root);
     }
 
+    bool does_exist(const Key& key) const {
+        if(find(key)) {
+            return true;
+        }
+        return false;
+
+    }
     // static void print_inorder(std::shared_ptr<_Node>& root) {
     //     if(!root) {
     //         return;
@@ -437,6 +444,7 @@ public:
         MyArray<_Node*> merged_list = mergeToList(avl1, avl2);
         return listToAVL(merged_list);
     }
+
 };
 
 #endif

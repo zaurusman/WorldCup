@@ -24,15 +24,16 @@
 using namespace std;
 class world_cup_t {
 private:
-	AVL<int, Team> teamsTree;
-    shared_ptr<Player> topScorer;
+    AVL<int, Team> teams_tree;
+    AVL<int, Player> players_tree;
+    shared_ptr<Player> top_scorer;
     int numOfPlayers=0;
     int numOfTeams=0;
 
 
 public:
 	// <DO-NOT-MODIFY> {
-	
+
 	world_cup_t();
 	virtual ~world_cup_t();
 	

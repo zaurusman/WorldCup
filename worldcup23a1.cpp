@@ -1,5 +1,5 @@
 #include "worldcup23a1.h"
-world_cup_t::world_cup_t():teamsTree(AVL<int,Team>(int(),Team()))
+world_cup_t::world_cup_t():teams_tree(AVL<int,Team>(int(),Team()))
 {}
 
 world_cup_t::~world_cup_t() {}//are all necessary destructors being called?
@@ -9,7 +9,7 @@ StatusType world_cup_t::add_team(int teamId, int points)
     if(teamId<=0||points<0)
         return StatusType::INVALID_INPUT;
     try {
-        teamsTree.insert(teamId, Team(teamId, points));
+        teams_tree.insert(teamId, Team(teamId, points));
     }catch(const KeyAlreadyExists& e) {
         cout<<e.what()<<endl;
             return  StatusType::FAILURE;
@@ -23,8 +23,8 @@ StatusType world_cup_t::add_team(int teamId, int points)
 StatusType world_cup_t::remove_team(int teamId)
 {
     try {
-        if (teamsTree.find(teamId).Players_Tree.height != 0) {//PlayersTree need to be added to team.
-            teamsTree.remove(teamId);
+        if (teams_tree.find(teamId)->info.get_players().get_tree_height() != 0) {//PlayersTree need to be added to team.
+            teams_tree.remove(teamId);
             return StatusType::SUCCESS;
         }
     }catch(const KeyDoesNotExist& e) {
@@ -40,7 +40,19 @@ StatusType world_cup_t::remove_team(int teamId)
 StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
                                    int goals, int cards, bool goalKeeper)
 {
-	// TODO: Your code goes here
+    if(playerId<=0||teamId<=0||gamesPlayed<0||goals<0||cards<0||gamesPlayed==0&&(goals>0||cards>0)){
+        return StatusType::INVALID_INPUT;
+    }
+    try {
+        if(players_tree.does_exist(playerId))
+            return StatusType::FAILURE;
+        teams_tree.find(teamId)->info.get_players().insert(playerId, Player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper));
+    }catch(std::bad_alloc& e)
+    {
+        return StatusType::ALLOCATION_ERROR;
+    }catch(KeyDoesNotExist& e){
+        return StatusType::FAILURE;
+    }
 	return StatusType::SUCCESS;
 }
 
