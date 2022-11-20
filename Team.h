@@ -33,6 +33,8 @@ public:
 
     int get_games_played();
 
+    AVL<int, Player> get_players();
+
 };
 
 

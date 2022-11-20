@@ -21,3 +21,7 @@ int Team::get_team_power() {
 int Team::get_games_played() {
     return games_played;
 }
+
+AVL<int, Player> Team::get_players() {
+    return players;
+}
