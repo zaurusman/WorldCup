@@ -23,15 +23,15 @@
 #include <exception>
 using namespace std;
 class world_cup_t {
-private:
-    AVL<int, Team> teams_tree;
-    AVL<int, Player> players_tree;
+public: //private:
+    AVL<int, Team> teams;
+    AVL<int, Player> all_players;
     shared_ptr<Player> top_scorer;
     int numOfPlayers=0;
     int numOfTeams=0;
 
 
-public:
+//public:
 	// <DO-NOT-MODIFY> {
 
 	world_cup_t();
