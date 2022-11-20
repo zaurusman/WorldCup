@@ -21,7 +21,7 @@ class Player {
     int closest_player_cards;
 
 public:
-    Player(player_id, team_id, games_played, goals, cards, goalkeeper);
+    Player(int player_id,int team_id,int games_played,int goals,int cards,bool goalkeeper);
 
     int get_games_played();
 };

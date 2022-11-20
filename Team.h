@@ -22,9 +22,10 @@ class Team {
     bool has_goalkeeper;
 
 public:
+    Team()=default;
     Team(int team_id, int points);
 
-    int is_empty();
+    bool is_empty();
 
     int get_team_power();
 

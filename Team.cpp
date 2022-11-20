@@ -11,14 +11,14 @@ Team::Team(int team_id, int points):
         // how to initialize players?
 {}
 
-Team::is_empty() {
+bool Team::is_empty() {
     return number_of_players == 0;
 }
 
-Team::get_team_power() {
+int Team::get_team_power() {
     return points + number_of_players * (total_goals - total_cards);
 }
 
-Team::get_games_played() {
+int Team::get_games_played() {
     return games_played;
 }

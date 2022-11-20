@@ -4,7 +4,7 @@
 
 #include "Player.h"
 
-Player::Player(player_id, team_id, games_played, goals, cards, goalkeeper):
+Player::Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper):
     player_id(player_id),
     team_id(team_id),
     games_played(games_played),
