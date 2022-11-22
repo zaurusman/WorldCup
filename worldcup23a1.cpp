@@ -47,8 +47,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         if(players_tree.does_exist(playerId))
             return StatusType::FAILURE;
         teams_tree.find(teamId)->info.get_players().insert(playerId, Player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper));
-    }catch(std::bad_alloc& e)
-    {
+    }catch(std::bad_alloc& e){
         return StatusType::ALLOCATION_ERROR;
     }catch(KeyDoesNotExist& e){
         return StatusType::FAILURE;
@@ -65,13 +64,25 @@ StatusType world_cup_t::remove_player(int playerId)
 StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
                                         int scoredGoals, int cardsReceived)
 {
-	// TODO: Your code goes here
+    if(playerId<=0||gamesPlayed<0||scoredGoals<0){
+        return StatusType::INVALID_INPUT;
+    }
+    try {
+        Player &to_update = players_tree.find(playerId)->info;
+        to_update.set_games_played(gamesPlayed);
+        to_update.set_goals(scoredGoals);
+        to_update.set_cards(cardsReceived);
+    }catch(KeyDoesNotExist& e){
+        return StatusType::FAILURE;
+    }catch(std::bad_alloc& e){
+        return StatusType::ALLOCATION_ERROR;
+    }
 	return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::play_match(int teamId1, int teamId2)
 {
-	// TODO: Your code goes here
+    
 	return StatusType::SUCCESS;
 }
 

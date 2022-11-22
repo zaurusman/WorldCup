@@ -24,6 +24,9 @@ public:
     Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper);
 
     int get_games_played();
+    void set_games_played(int games_played);
+    void set_goals(int goals);
+    void set_cards(int cards);
 };
 
 

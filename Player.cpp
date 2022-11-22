@@ -21,3 +21,15 @@ Player::Player(int player_id, int team_id, int games_played, int goals, int card
 int Player::get_games_played() {
     return games_played + his_team->get_games_played() - games_team_played_without;
 }
+
+void Player::set_games_played(int games_played) {
+    games_played += games_played;
+}
+
+void Player::set_goals(int goals) {
+    goals+=goals;
+}
+
+void Player::set_cards(int cards) {
+    cards+=cards;
+}
