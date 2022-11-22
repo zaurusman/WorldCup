@@ -1,5 +1,5 @@
 #include "worldcup23a1.h"
-world_cup_t::world_cup_t():teams_tree(AVL<int,Team>(int(),Team()))
+world_cup_t::world_cup_t(): teams(AVL<int,Team>(int(), Team()))
 {}
 
 world_cup_t::~world_cup_t() {}//are all necessary destructors being called?
@@ -9,7 +9,7 @@ StatusType world_cup_t::add_team(int teamId, int points)
     if(teamId<=0||points<0)
         return StatusType::INVALID_INPUT;
     try {
-        teams_tree.insert(teamId, Team(teamId, points));
+        teams.insert(teamId, Team(teamId, points));
     }catch(const KeyAlreadyExists& e) {
         cout<<e.what()<<endl;
             return  StatusType::FAILURE;
@@ -23,8 +23,8 @@ StatusType world_cup_t::add_team(int teamId, int points)
 StatusType world_cup_t::remove_team(int teamId)
 {
     try {
-        if (teams_tree.find(teamId)->info.get_players().get_tree_height() != 0) {//PlayersTree need to be added to team.
-            teams_tree.remove(teamId);
+        if (teams.find(teamId)->info.get_players().get_tree_height() != 0) {//PlayersTree need to be added to team.
+            teams.remove(teamId);
             return StatusType::SUCCESS;
         }
     }catch(const KeyDoesNotExist& e) {
@@ -44,10 +44,11 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         return StatusType::INVALID_INPUT;
     }
     try {
-        if(players_tree.does_exist(playerId))
+        if(all_players.does_exist(playerId))
             return StatusType::FAILURE;
-        teams_tree.find(teamId)->info.get_players().insert(playerId, Player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper));
-    }catch(std::bad_alloc& e){
+        teams.find(teamId)->info.get_players().insert(playerId, Player(playerId, teamId, gamesPlayed, goals, cards, goalKeeper));
+    }catch(std::bad_alloc& e)
+    {
         return StatusType::ALLOCATION_ERROR;
     }catch(KeyDoesNotExist& e){
         return StatusType::FAILURE;
@@ -57,8 +58,20 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 
 StatusType world_cup_t::remove_player(int playerId)
 {
-	// TODO: Your code goes here
-	return StatusType::SUCCESS;
+    if (playerId <= 0){
+        return StatusType::INVALID_INPUT;
+    }
+    try {
+        all_players.remove(playerId);
+        // TODO: figure how to remove from teams tree
+    }
+    catch(const KeyDoesNotExist& e) {
+        return StatusType::FAILURE;
+    } catch(const std::bad_alloc& e){
+        return StatusType::ALLOCATION_ERROR;
+    }
+
+    return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
@@ -82,7 +95,7 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 
 StatusType world_cup_t::play_match(int teamId1, int teamId2)
 {
-    
+	// TODO: Your code goes here
 	return StatusType::SUCCESS;
 }
 
