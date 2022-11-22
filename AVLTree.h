@@ -63,12 +63,12 @@
 using namespace std;
 
 /*     EXCEPTIONS     */
-class KeyAlreadyExists : public std::exception {
-public:
-    virtual const char* what() const noexcept override {
-            return "Key already exists";
-    }
-};
+//class KeyAlreadyExists : public std::exception {
+//public:
+ //   virtual const char* what() const noexcept override {
+ //           return "Key already exists";
+//    }
+//};
 class KeyDoesNotExist : public std::exception {
 public:
     virtual const char* what() const noexcept override {
@@ -191,7 +191,7 @@ private:
         }
         else {  // key > root->key
             insert_aux(root->right, key, info);
-        }
+        }/
         balance_aux(root);
         root->height = 1 + max(height(root->left), height(root->right));
     }
