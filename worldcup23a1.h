@@ -21,11 +21,12 @@
 #include "Player.h"
 #include <memory>
 #include <exception>
+
 using namespace std;
 class world_cup_t {
 public: //private:
-    AVL<int, Team> teams;
-    AVL<int, Player> all_players;
+    AVLTree<int, Team> teams;
+    AVLTree<int, Player> all_players;
     shared_ptr<Player> top_scorer;
     int numOfPlayers=0;
     int numOfTeams=0;

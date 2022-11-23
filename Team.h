@@ -14,7 +14,7 @@ class Player;
 class Team {
     int team_id;
     int points;
-    AVL<int, Player> players;
+    AVLTree<int, Player> players;
     int number_of_players;
     int total_goals;
     int total_cards;
@@ -33,7 +33,7 @@ public:
 
     int get_games_played();
 
-    AVL<int, Player> get_players();
+    AVLTree<int, Player> get_players();
 
 };
 

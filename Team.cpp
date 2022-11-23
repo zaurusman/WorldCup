@@ -22,6 +22,6 @@ int Team::get_games_played() {
     return games_played;
 }
 
-AVL<int, Player> Team::get_players() {
+AVLTree<int, Player> Team::get_players() {
     return players;
 }
