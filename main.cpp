@@ -22,19 +22,32 @@ int main() {
 
 
     AVLTree<int,Player> my_avl_tree;
-    my_avl_tree.insert(10, Player(10, 1, 0, 0, 0, false));
-    my_avl_tree.insert(9, Player(10, 1, 0, 0, 0, false));
-    my_avl_tree.insert(8, Player(10, 1, 0, 0, 0, false));
-    my_avl_tree.insert(7, Player(10, 1, 0, 0, 0, false));
-    my_avl_tree.insert(6, Player(10, 1, 0, 0, 0, false));
-    my_avl_tree.insert(20, Player(10, 1, 0, 0, 0, false));
+    my_avl_tree.insert(3, Player(3, 1, 0, 0, 0, false));
+    my_avl_tree.insert(33, Player(11, 1, 0, 0, 0, false));
+    my_avl_tree.insert(22, Player(22, 1, 0, 0, 0, false));
+    my_avl_tree.insert(1, Player(10, 1, 0, 0, 0, false));
     my_avl_tree.insert(4, Player(10, 1, 0, 0, 0, false));
+    my_avl_tree.insert(5, Player(10, 1, 0, 0, 0, false));
+
     my_avl_tree.inorder();
-    my_avl_tree.remove(9);
+
+    my_avl_tree.remove(1);
+    my_avl_tree.remove(3);
     my_avl_tree.inorder();
-    my_avl_tree.remove(10);
+    my_avl_tree.remove(33);
     my_avl_tree.inorder();
-    my_avl_tree.insert(10, Player(10, 1, 0, 0, 0, false));
-    my_avl_tree.inorder();
+
+    cout << "tree height is: " << my_avl_tree.get_tree_height() << endl;
+//    my_avl_tree.remove(11);
+//    my_avl_tree.inorder();
+//    cout << "tree height is: " << my_avl_tree.get_tree_height() << endl;
+
+
+//    my_avl_tree.remove(9);
+//    my_avl_tree.inorder();
+//    my_avl_tree.remove(10);
+//    my_avl_tree.inorder();
+//    my_avl_tree.insert(10, Player(10, 1, 0, 0, 0, false));
+//    my_avl_tree.inorder();
 
 }

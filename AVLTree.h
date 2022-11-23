@@ -21,11 +21,6 @@ public:
 
     Node(const Key &key, const Info &info):key(key), info(info),left(nullptr),right(nullptr),height(0){}
     Node() = default;
-
-    int get_balance_factor() const{
-
-        return get_height(left) - get_height(right);
-    }
 };
 
 class KeyAlreadyExists : public std::exception {
@@ -55,6 +50,10 @@ private:
         return root->height;
     }
 
+    static int get_balance_factor(shared_ptr<Node<Key, Info>>& root){
+        return get_height(root->left) - get_height(root->right);
+    }
+
     static void insert_rec(shared_ptr<Node<Key,Info>>& root, const Key &key,const Info &info){
         if(!root){
             root = shared_ptr<Node<Key,Info>>(new Node<Key,Info>(key,info));
@@ -68,8 +67,9 @@ private:
         else {// root->key == key
             throw KeyAlreadyExists();
         }
-        //check balance factor
-        root->height = 1+max(get_height(root->left), get_height(root->right));
+
+        balance(root);
+        root->height = 1 + max(get_height(root->left), get_height(root->right));
     };
 
     static void remove_rec(shared_ptr<Node<Key,Info>>& root, const Key &key) {
@@ -79,24 +79,26 @@ private:
 
         else if(key < root->key){
             remove_rec(root->left,key);
+            root->height = 1 + max(get_height(root->left), get_height(root->right));
         }
         else if(root->key < key){
             remove_rec(root->right,key);
+            root->height = 1 + max(get_height(root->left), get_height(root->right));
         }
-        else {   // root->key == key
-            // leaf
+        else {   // reached node to remove: root->key == key
+            // removed node is leaf
             if (!root->left && !root->right) {
                 root.reset();
             }
-            // has only left son
+            // removed node has only left son
             else if (root->left && !root->right) {
                 root = root->left;
             }
-            // has only right son
+            // removed node has only right son
             else if (!root->left && root->right) {
                 root = root->right;
             }
-            // has both sons
+            // removed node has both sons
             else {
                 shared_ptr<Node<Key,Info>> next = get_next(root);
                 root->key = next->key;
@@ -104,6 +106,8 @@ private:
                 remove_rec(root->right, next->key);
             }
         }
+
+        balance(root);
     }
 
     static shared_ptr<Node<Key,Info>> get_next(shared_ptr<Node<Key,Info>> root) {
@@ -122,25 +126,59 @@ private:
         return root;
     }
 
+    static void LL_rotate(shared_ptr<Node<Key,Info>>& root) {
+        // B = root, A = root->left
+        // A left child stays the same
+        // A right child becomes B
+        // B left child becomes A prev left child
+        // B right child stays the same
+        shared_ptr<Node<Key,Info>> Ar = root->left->right;
+        shared_ptr<Node<Key,Info>> B = root;
+        root = root->left;
+        root->right = B;
+        root->right->left = Ar;
+        root->right->height = 1 + max(get_height(root->right->left), get_height(root->right->right));
+        root->height = 1 + max(get_height(root->left), get_height(root->right));
+    }
+
+    static void RR_rotate(shared_ptr<Node<Key,Info>>& root) {
+        // A = root, B = root->right
+        // A left child stays the same
+        // A right child becomes prev B left child
+        // B left child becomes A
+        // B right child stays the same
+        shared_ptr<Node<Key,Info>> Bl = root->right->left;
+        shared_ptr<Node<Key,Info>> A = root;
+        root = root->right;
+        root->left = A;
+        root->left->right = Bl;
+        root->left->height = 1 + max(get_height(root->left->left), get_height(root->left->right));
+        root->height = 1 + max(get_height(root->left), get_height(root->right));
+    }
+
     static void balance(shared_ptr<Node<Key,Info>>& root){
         if(!root){
             return;
         }
-        int bf = root->get_balance_factor();
-        if(bf==2){
-            if(root->left->get_balance_factor()>-1){
-                //LL
+        int bf = get_balance_factor(root);
+        if(bf == 2){
+            if(get_balance_factor(root->left) > -1){ // left bf == 1
+                LL_rotate(root);
             }
-            else if(root->left->get_balance_factor()==-1){
+            else if(get_balance_factor(root->left)==-1){
                 //LR
+                RR_rotate(root->left);
+                LL_rotate(root);
             }
         }
         else if(bf==-2){
-            if(root->right->get_balance_factor()<1) {
-                //RR
+            if(get_balance_factor(root->right)<1) { // right bf == -1
+                RR_rotate(root);
             }
-            else if(root->left->get_balance_factor()==1){
+            else if(get_balance_factor(root->right)==1){
                 //RL
+                LL_rotate(root->right);
+                RR_rotate(root);
             }
         }
     }
@@ -190,6 +228,10 @@ public:
 
     shared_ptr<Node<Key,Info>> find(Key& key){
         return find_rec(root,key);
+    }
+
+    int get_tree_height(){
+        return get_height(root);
     }
 };
 
