@@ -8,17 +8,23 @@
 #include "LinkedList.h"
 
 int main() {
-//    LinkedList<int> my_list;
-//    my_list.print_list();
-//    ListNode<int>* three = my_list.insert_node(nullptr, 3, nullptr);
-//    my_list.print_list();
-//    ListNode<int>* one = my_list.insert_node(three, 1, nullptr);
-//    my_list.print_list();
-//    ListNode<int>* fourty = my_list.insert_node(nullptr, 40, three);
-//    my_list.print_list();
+    LinkedList<int> my_list;
+    my_list.print_list();
+    ListNode<int>* three = my_list.insert_between(nullptr, 3, nullptr);
+    my_list.print_list();
+    ListNode<int>* one = my_list.insert_between(three, 1, nullptr);
+    my_list.print_list();
+    ListNode<int>* fourty = my_list.insert_between(nullptr, 40, three);
+    my_list.print_list();
 //    my_list.remove_node(three);
 //    my_list.print_list();
+    int* arr = my_list.list_to_array();
+    int n = my_list.get_number_of_nodes();
+    for (int i=0; i<n; i++) {
+        cout << arr[i] << ",,";
+    }
 
+    return 1;
 
 //    world_cup_t my_world_cup;
 //    cout << my_world_cup.teams.get_tree_height() << endl;
