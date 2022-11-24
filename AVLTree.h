@@ -166,7 +166,7 @@ private:
                 LL_rotate(root);
             }
             else if(get_balance_factor(root->left)==-1){
-                //LR
+                //LR rotation
                 RR_rotate(root->left);
                 LL_rotate(root);
             }
@@ -176,7 +176,7 @@ private:
                 RR_rotate(root);
             }
             else if(get_balance_factor(root->right)==1){
-                //RL
+                //RL rotation
                 LL_rotate(root->right);
                 RR_rotate(root);
             }
