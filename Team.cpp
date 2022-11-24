@@ -22,6 +22,14 @@ int Team::get_games_played() {
     return games_played;
 }
 
-AVLTree<int, Player> Team::get_players() {
+int Team::get_number_of_players() {
+    return number_of_players;
+}
+
+bool Team::goalkeeper(){
+    return has_goalkeeper;
+}
+
+AVLTree<int, shared_ptr<Player>> Team::get_players() {
     return players;
 }

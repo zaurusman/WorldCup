@@ -196,7 +196,6 @@ private:
         else {   // root->key == key
             return root;
         }
-
     }
     static void print_inorder(shared_ptr<Node<Key,Info>>& root) {
         if(!root) {
@@ -208,8 +207,8 @@ private:
     }
 
 public:
-    AVLTree(Key key, Info info) : root(shared_ptr<Node<Key,Info>>(key, info)){}
-    explicit AVLTree(std::shared_ptr<Node<Key,Info>>& root): root(root), number_of_nodes(1){}
+    AVLTree(Key key, Info info) : root(nullptr),number_of_nodes(0){}
+    explicit AVLTree(std::shared_ptr<Node<Key,Info>>& root): root(root), number_of_nodes(0){}
     AVLTree() = default;
     void insert(const Key &key,const Info &info){
         insert_rec(root, key,info);

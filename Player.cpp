@@ -44,3 +44,6 @@ int Player::get_goals() {
 int Player::get_cards() {
     return cards;
 }
+Team* Player::get_team() {
+    return his_team;
+}

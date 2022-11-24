@@ -33,6 +33,7 @@ public:
     int get_id();
     int get_goals();
     int get_cards();
+    Team* get_team();
 
 
     class Stats {

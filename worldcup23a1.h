@@ -25,11 +25,13 @@
 using namespace std;
 class world_cup_t {
 public: //private:
-    AVLTree<int, Team> teams;
-    AVLTree<int, Player> all_players;
+    AVLTree<int, shared_ptr<Team>> teams;
+    AVLTree<int, shared_ptr<Team>> valid_teams;
+    AVLTree<int, shared_ptr<Player>> all_players;
     shared_ptr<Player> top_scorer;
     int numOfPlayers=0;
     int numOfTeams=0;
+    static const int VALID_SIZE = 11;
 
 
 //public:

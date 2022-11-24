@@ -14,14 +14,14 @@ class Player;
 class Team {
     int team_id;
     int points;
-    AVLTree<int, Player> players;
+    AVLTree<int, shared_ptr<Player>> players;
     int number_of_players;
     int total_goals;
     int total_cards;
     int games_played;
     int top_scorer_id;
     char* top_scorer_name;
-    bool has_goalkeeper;
+    bool has_goalkeeper = false;
 
 public:
     Team()=default;
@@ -33,7 +33,11 @@ public:
 
     int get_games_played();
 
-    AVLTree<int, Player> get_players();
+    int get_number_of_players();
+
+    bool goalkeeper();
+
+    AVLTree<int, shared_ptr<Player>> get_players();
 
 };
 
