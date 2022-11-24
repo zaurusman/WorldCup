@@ -22,14 +22,25 @@ int Player::get_games_played() {
     return games_played + his_team->get_games_played() - games_team_played_without;
 }
 
-void Player::set_games_played(int games_played) {
-    games_played += games_played;
+void Player::set_games_played(int ngames_played) {
+    games_played += ngames_played;
 }
 
-void Player::set_goals(int goals) {
-    goals+=goals;
+void Player::set_goals(int ngoals) {
+    goals+=ngoals;
 }
 
-void Player::set_cards(int cards) {
-    cards+=cards;
+void Player::set_cards(int ncards) {
+    cards+=ncards;
+}
+
+int Player::get_id() {
+    return player_id;
+}
+int Player::get_goals() {
+    return goals;
+}
+
+int Player::get_cards() {
+    return cards;
 }

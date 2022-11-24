@@ -21,6 +21,7 @@ public:
 
     Node(const Key &key, const Info &info):key(key), info(info),left(nullptr),right(nullptr),height(0){}
     Node() = default;
+
 };
 
 class KeyAlreadyExists : public std::exception {
@@ -49,12 +50,12 @@ private:
         }
         return root->height;
     }
+    static int get_balance_factor(shared_ptr<Node<Key,Info>>& root){
 
-    static int get_balance_factor(shared_ptr<Node<Key, Info>>& root){
         return get_height(root->left) - get_height(root->right);
     }
 
-    static void insert_rec(shared_ptr<Node<Key,Info>>& root, const Key &key,const Info &info){
+    static void insert_rec(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info){
         if(!root){
             root = shared_ptr<Node<Key,Info>>(new Node<Key,Info>(key,info));
         }
@@ -67,9 +68,8 @@ private:
         else {// root->key == key
             throw KeyAlreadyExists();
         }
-
         balance(root);
-        root->height = 1 + max(get_height(root->left), get_height(root->right));
+        root->height = 1+max(get_height(root->left), get_height(root->right));
     };
 
     static void remove_rec(shared_ptr<Node<Key,Info>>& root, const Key &key) {
@@ -188,10 +188,10 @@ private:
             throw KeyDoesNotExist();
         }
         else if(key < root->key){
-            remove_rec(root->left,key);
+            find_rec(root->left,key);
         }
         else if(root->key < key){
-            remove_rec(root->right,key);
+            find_rec(root->right,key);
         }
         else {   // root->key == key
             return root;
