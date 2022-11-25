@@ -112,15 +112,13 @@ public:
         return number_of_nodes;
     }
 
-    T *list_to_array() {
+    void list_to_array(T* output) {
+        // output is the array allocated by the caller
         ListNode<T> *temp = first;
-        T *array = (T *) malloc(sizeof(T) * number_of_nodes);
         for (int i = 0; i < number_of_nodes; i++) {
-            array[i] = temp->data;
+            output[i] = temp->data;
             temp = temp->next;
         }
-        // TODO: should user allocate memory or is this fine?
-        return array;
     }
 };
 

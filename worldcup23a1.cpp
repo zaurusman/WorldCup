@@ -13,10 +13,9 @@ StatusType world_cup_t::add_team(int teamId, int points) {
     if (teamId <= 0 || points < 0)
         return StatusType::INVALID_INPUT;
     try {
-        Team* new_team = new Team(teamId, points);
-        teams.insert(teamId, shared_ptr<Team>(new_team));
-        valid_teams.insert(teamId, shared_ptr<Team>(new_team));
-        // TODO: is the above code fine
+        shared_ptr<Team> new_team(new Team(teamId, points));
+        teams.insert(teamId, new_team);
+        valid_teams.insert(teamId, new_team);
     } catch (const KeyAlreadyExists &e) {
         cout << e.what() << endl;
         return StatusType::FAILURE;
@@ -45,29 +44,24 @@ StatusType world_cup_t::remove_team(int teamId) {
 
 StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
                                    int goals, int cards, bool goalKeeper) {
-    if (playerId <= 0 || teamId <= 0 || gamesPlayed < 0 || goals < 0 || cards < 0 ||
-        gamesPlayed == 0 && (goals > 0 || cards > 0)) {
+    if (playerId <= 0 || teamId <= 0 || gamesPlayed < 0 || goals < 0 || cards < 0 || gamesPlayed == 0 && (goals > 0 || cards > 0)) {
         return StatusType::INVALID_INPUT;
     }
-    try {
-        if (all_players.find(playerId))
-            return StatusType::FAILURE;
-        else {
-            shared_ptr<Team> his_team = teams.find(teamId)->info;
-            shared_ptr<Player> to_add = make_shared<Player>(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
-            his_team->get_players().insert(playerId, to_add);
-            if (his_team->get_number_of_players() >= VALID_SIZE && his_team->goalkeeper() &&
-                !valid_teams.find(teamId)) {
-                valid_teams.insert(teamId, his_team);
-            }
-            all_players.insert(playerId, to_add);
-            //TODO: add next and prev check.
-        }
-    } catch (std::bad_alloc &e) {
-        return StatusType::ALLOCATION_ERROR;
-    } catch (KeyDoesNotExist &e) {
+
+    if (all_players.does_exist(playerId)) {
         return StatusType::FAILURE;
     }
+
+    shared_ptr<Team> his_team = teams.find(teamId)->info;
+    shared_ptr<Player> to_add = make_shared<Player>(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
+    his_team->get_players().insert(playerId, to_add);
+    if (his_team->get_number_of_players() >= VALID_SIZE && his_team->goalkeeper() &&
+        !valid_teams.find(teamId)) {
+        valid_teams.insert(teamId, his_team);
+    }
+    all_players.insert(playerId, to_add);
+    //TODO: add next and prev check.
+
     return StatusType::SUCCESS;
 }
 
@@ -135,9 +129,19 @@ output_t<int> world_cup_t::get_top_scorer(int teamId) {
 }
 
 output_t<int> world_cup_t::get_all_players_count(int teamId) {
-    // TODO: Your code goes here
-    static int i = 0;
-    return (i++ == 0) ? 11 : 2;
+    if (teamId < 0) {
+        return all_players.get_number_of_nodes();
+    } else if (teamId > 0) {
+        try {
+            shared_ptr<Team> team_obj = teams.find(teamId)->info;
+            return team_obj->get_players().get_number_of_nodes();
+        } catch (const KeyDoesNotExist &e) {
+            return StatusType::FAILURE;
+        }
+    } else {
+        output_t<int> err(StatusType::INVALID_INPUT);
+        return err;
+    }
 }
 
 StatusType world_cup_t::get_all_players(int teamId, int *const output) {

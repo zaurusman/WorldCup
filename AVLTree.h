@@ -50,6 +50,7 @@ private:
         }
         return root->height;
     }
+
     static int get_balance_factor(shared_ptr<Node<Key,Info>>& root){
 
         return get_height(root->left) - get_height(root->right);
@@ -57,7 +58,7 @@ private:
 
     static void insert_rec(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info){
         if(!root){
-            root = shared_ptr<Node<Key,Info>>(new Node<Key,Info>(key,info));
+            root = make_shared<Node<Key,Info>>(Node<Key,Info>(key,info));
         }
         else if(key < root->key){
             insert_rec(root->left,key,info);
@@ -110,7 +111,7 @@ private:
         balance(root);
     }
 
-    static shared_ptr<Node<Key,Info>> get_next(shared_ptr<Node<Key,Info>> root) {
+    static shared_ptr<Node<Key,Info>> get_next(shared_ptr<Node<Key,Info>>& root) {
         root = root->right;
         while (root->left) {
             root = root->left;
@@ -118,7 +119,7 @@ private:
         return root;
     }
 
-    static shared_ptr<Node<Key,Info>> get_prev(shared_ptr<Node<Key,Info>> root) {
+    static shared_ptr<Node<Key,Info>> get_prev(shared_ptr<Node<Key,Info>>& root) {
         root = root->left;
         while (root->right) {
             root = root->right;
@@ -188,12 +189,11 @@ private:
             throw KeyDoesNotExist();
         }
         else if(key < root->key){
-            find_rec(root->left,key);
+            return find_rec(root->left,key);
         }
         else if(root->key < key){
-            find_rec(root->right,key);
-        }
-        else {   // root->key == key
+            return find_rec(root->right,key);
+        } else {
             return root;
         }
     }
@@ -210,6 +210,7 @@ public:
     AVLTree(Key key, Info info) : root(nullptr),number_of_nodes(0){}
     explicit AVLTree(std::shared_ptr<Node<Key,Info>>& root): root(root), number_of_nodes(0){}
     AVLTree() = default;
+    ~AVLTree() = default;
     void insert(const Key &key,const Info &info){
         insert_rec(root, key,info);
         number_of_nodes++;
@@ -229,8 +230,21 @@ public:
         return find_rec(root,key);
     }
 
+    bool does_exist(Key& key) {
+        try {
+            find(key);
+        } catch (KeyDoesNotExist &e) {
+            return false;
+        }
+        return true;
+    }
+
     int get_tree_height(){
         return get_height(root);
+    }
+
+    int get_number_of_nodes() {
+        return number_of_nodes;
     }
 };
 

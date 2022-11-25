@@ -28,6 +28,7 @@ class Team {
 
 public:
     Team() = default;
+    ~Team() = default;
 
     Team(int team_id, int points);
 
@@ -41,7 +42,7 @@ public:
 
     bool goalkeeper();
 
-    AVLTree<int, shared_ptr<Player>> get_players();
+    AVLTree<int, shared_ptr<Player>>& get_players();
 
 };
 

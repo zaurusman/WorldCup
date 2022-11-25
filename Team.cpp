@@ -30,6 +30,6 @@ bool Team::goalkeeper(){
     return has_goalkeeper;
 }
 
-AVLTree<int, shared_ptr<Player>> Team::get_players() {
+AVLTree<int, shared_ptr<Player>>& Team::get_players() {
     return players;
 }
