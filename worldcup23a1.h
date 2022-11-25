@@ -34,6 +34,8 @@ public: //private:
     int numOfPlayers = 0;
     int numOfTeams = 0;
     static const int VALID_SIZE = 11;
+    static const int WINNER_POINTS = 3;
+    static const int DRAW_POINTS = 1;
 
 
 //public:

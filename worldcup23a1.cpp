@@ -5,17 +5,17 @@
 #include "LinkedList.h"
 
 
-world_cup_t::world_cup_t() : teams(AVLTree<int, shared_ptr<Team>>(int(), shared_ptr<Team>())) {}
+world_cup_t::world_cup_t() : teams(AVLTree<int, shared_ptr<Team>>()) {}
 
 world_cup_t::~world_cup_t() {}//are all necessary destructors being called?
 
-StatusType world_cup_t::add_team(int teamId, int points) {
-    if (teamId <= 0 || points < 0)
+StatusType world_cup_t::add_team(int team_id, int points) {
+    if (team_id <= 0 || points < 0)
         return StatusType::INVALID_INPUT;
     try {
-        shared_ptr<Team> new_team(new Team(teamId, points));
-        teams.insert(teamId, new_team);
-        valid_teams.insert(teamId, new_team);
+        shared_ptr<Team> new_team(new Team(team_id, points));
+        teams.insert(team_id, new_team);
+        valid_teams.insert(team_id, new_team);
     } catch (const KeyAlreadyExists &e) {
         return StatusType::FAILURE;
     } catch (const std::bad_alloc &e) {
@@ -52,7 +52,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     }
 
     shared_ptr<Team> his_team = teams.find(teamId)->info;
-    shared_ptr<Player> to_add = make_shared<Player>(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
+    shared_ptr<Player> to_add = make_shared<Player>(playerId, his_team, gamesPlayed, goals, cards, goalKeeper);
     his_team->get_players().insert(playerId, to_add);
     if (his_team->get_number_of_players() >= VALID_SIZE && his_team->goalkeeper() &&
         !valid_teams.find(teamId)) {
@@ -71,6 +71,7 @@ StatusType world_cup_t::remove_player(int playerId) {
     try {
         all_players.find(playerId)->info->get_team()->get_players().remove(playerId);
         all_players.remove(playerId);
+        all_players.find(playerId)->info->get_team()->update_strength();
         //TODO: update the other trees as necessary.
 
     }
@@ -93,7 +94,8 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         to_update.set_games_played(gamesPlayed);
         to_update.set_goals(scoredGoals);
         to_update.set_cards(cardsReceived);
-    } catch (KeyDoesNotExist &e) {
+        to_update.get_team()->update_strength();
+    }catch(KeyDoesNotExist& e) {
         return StatusType::FAILURE;
     } catch (std::bad_alloc &e) {
         return StatusType::ALLOCATION_ERROR;
@@ -101,10 +103,26 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
     return StatusType::SUCCESS;
 }
 
-StatusType world_cup_t::play_match(int teamId1, int teamId2) {
+StatusType world_cup_t::play_match(int teamId1, int teamId2)
+{
+    if(!valid_teams.find(teamId1)||!valid_teams.find(teamId2)) {
+        return StatusType::FAILURE;
+    }
+    shared_ptr<Team> team1 = valid_teams.find(teamId1)->info;
+    shared_ptr<Team> team2 = valid_teams.find(teamId2)->info;
+    if(team1->get_strength()>team2->get_strength()){
+        team1->set_points(WINNER_POINTS);
+    }else if(team1->get_strength()<team2->get_strength()){
+        team2->set_points(WINNER_POINTS);
+    }else {//Draw
+        team1->set_points(DRAW_POINTS);
+        team2->set_points(DRAW_POINTS);
+    }
+    team1->add_games_played(1);
+    team2->add_games_played(1);
+	return StatusType::SUCCESS;
 
-    // TODO: Your code goes here
-    return StatusType::SUCCESS;
+    //TODO: finish func
 }
 
 output_t<int> world_cup_t::get_num_played_games(int playerId) {
@@ -129,11 +147,11 @@ output_t<int> world_cup_t::get_top_scorer(int teamId) {
 
 output_t<int> world_cup_t::get_all_players_count(int teamId) {
     if (teamId < 0) {
-        return all_players.get_number_of_nodes();
+        return all_players.get_nodes_count();
     } else if (teamId > 0) {
         try {
             shared_ptr<Team> team_obj = teams.find(teamId)->info;
-            return team_obj->get_players().get_number_of_nodes();
+            return team_obj->get_players().get_nodes_count();
         } catch (const KeyDoesNotExist &e) {
             return StatusType::FAILURE;
         }

@@ -11,20 +11,20 @@ class Team;
 
 class Stats;
 class Player {
-    int player_id;
-    int team_id;
+    int id;
+    shared_ptr<Team> team;
     int games_played;
     int goals;
     int cards;
-    bool goalkeeper;
-    Team *his_team;
     int games_team_played_without;
+    bool goalkeeper;
     Player *next_closest;
     Player *prev_closest;
+
     friend class Stats;
 
 public:
-    Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper);
+    Player(int id, shared_ptr<Team> team, int games_played, int goals, int cards, bool goalkeeper);
 
     int get_games_played();
 
@@ -40,10 +40,11 @@ public:
 
     int get_cards();
 
-    Team *get_team();
+    shared_ptr<Team>& get_team();
 };
 
-class Stats{
+class Stats
+        {
     int *player_id;
     int *goals;
     int *cards;
@@ -55,7 +56,7 @@ class Stats{
 
 public:
     //Stats(shared_ptr<int>& player_id,shared_ptr<int>& goals,shared_ptr<int>& cards):player_id(player_id), goals(goals), cards(cards){}
-    Stats(Player &player) : player_id(&player.player_id), goals(&player.goals), cards(&player.cards) {}
+    Stats(Player &player) : player_id(&player.id), goals(&player.goals), cards(&player.cards) {}
 
     Stats &operator=(const Stats &other) {
         if (this != &other) {

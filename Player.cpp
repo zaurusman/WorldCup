@@ -4,39 +4,39 @@
 
 #include "Player.h"
 
-Player::Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper):
-    player_id(player_id),
-    team_id(team_id),
-    games_played(games_played),
-    goals(goals),
-    cards(cards),
-    goalkeeper(goalkeeper),
-    his_team(nullptr),
-    games_team_played_without(0),
-    next_closest(nullptr),
-    prev_closest(nullptr)
+Player::Player(int id, shared_ptr<Team> team, int games_played, int goals, int cards, bool goalkeeper):
+        id(id),
+        team(team),
+        games_played(games_played),
+        goals(goals),
+        cards(cards),
+        goalkeeper(goalkeeper),
+        games_team_played_without(0),
+        next_closest(nullptr),
+        prev_closest(nullptr)
 {}
 
 
 int Player::get_games_played() {
-    return games_played + his_team->get_games_played() - games_team_played_without;
+    return games_played + team->get_games_played() - games_team_played_without;
 }
 
-void Player::set_games_played(int ngames_played) {
-    games_played += ngames_played;
+void Player::set_games_played(int games_played) {
+    games_played += games_played;
 }
 
-void Player::set_goals(int ngoals) {
-    goals+=ngoals;
+void Player::set_goals(int goals) {
+    goals+=goals;
 }
 
-void Player::set_cards(int ncards) {
-    cards+=ncards;
+void Player::set_cards(int cards) {
+    cards+=cards;
 }
 
 int Player::get_id() {
-    return player_id;
+    return id;
 }
+
 int Player::get_goals() {
     return goals;
 }
@@ -44,6 +44,6 @@ int Player::get_goals() {
 int Player::get_cards() {
     return cards;
 }
-Team* Player::get_team() {
-    return his_team;
+shared_ptr<Team>& Player::get_team() {
+    return team;
 }

@@ -35,7 +35,6 @@ public:
             delete first->prev;
             first->prev = nullptr;
         }
-
         delete first;
     }
 
@@ -66,7 +65,6 @@ public:
             to_insert->next = after;
             after->prev = to_insert;
         }
-
         number_of_nodes++;
         return to_insert;
     }
@@ -88,7 +86,9 @@ public:
     void remove_node(ListNode<T> *node) {
         ListNode<T> *before = node->prev;
         ListNode<T> *after = node->next;
-
+        if(!node){
+            throw std::invalid_argument("the node to be removed is nullptr");
+        }
         if (!before && after) {
             // removing first node
             first = after;
@@ -119,6 +119,7 @@ public:
             output[i] = temp->data;
             temp = temp->next;
         }
+        // TODO: should user allocate memory or is this fine? yes
     }
 };
 
