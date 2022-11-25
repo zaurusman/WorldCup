@@ -17,26 +17,25 @@ StatusType world_cup_t::add_team(int teamId, int points) {
         teams.insert(teamId, new_team);
         valid_teams.insert(teamId, new_team);
     } catch (const KeyAlreadyExists &e) {
-        cout << e.what() << endl;
         return StatusType::FAILURE;
     } catch (const std::bad_alloc &e) {
-        cout << e.what() << endl;
         return StatusType::ALLOCATION_ERROR;
     }
     return StatusType::SUCCESS;
 }
 
 StatusType world_cup_t::remove_team(int teamId) {
+    if (teamId <= 0)
+        return StatusType::INVALID_INPUT;
+
     try {
         if (teams.find(teamId)->info->get_players().get_tree_height() != 0) {//PlayersTree need to be added to team.
             teams.remove(teamId);
             return StatusType::SUCCESS;
         }
     } catch (const KeyDoesNotExist &e) {
-        cout << e.what() << endl;
         return StatusType::FAILURE;
     } catch (const std::bad_alloc &e) {
-        cout << e.what() << endl;
         return StatusType::ALLOCATION_ERROR;
     }
     return StatusType::FAILURE;
@@ -48,7 +47,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
         return StatusType::INVALID_INPUT;
     }
 
-    if (all_players.does_exist(playerId)) {
+    if (all_players.does_exist(playerId) || !teams.does_exist(teamId)) {
         return StatusType::FAILURE;
     }
 
