@@ -11,20 +11,24 @@
 #include <memory>
 
 class Player;
+class Stats;
+
 class Team {
     int team_id;
     int points;
     AVLTree<int, shared_ptr<Player>> players;
+    AVLTree<Stats, shared_ptr<Player>> players_score;
     int number_of_players;
     int total_goals;
     int total_cards;
     int games_played;
     int top_scorer_id;
-    char* top_scorer_name;
+    char *top_scorer_name;
     bool has_goalkeeper = false;
 
 public:
-    Team()=default;
+    Team() = default;
+
     Team(int team_id, int points);
 
     bool is_empty();

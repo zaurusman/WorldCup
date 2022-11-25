@@ -6,28 +6,30 @@
 #define WORLDCUP_LINKEDLIST_H
 
 #include <iostream>
+
 using namespace std;
 
 
-template <class T>
+template<class T>
 struct ListNode {
-    ListNode* next = nullptr;
-    ListNode* prev = nullptr;
+    ListNode *next = nullptr;
+    ListNode *prev = nullptr;
     T data;
 };
 
-template <class T>
+template<class T>
 class LinkedList {
-    ListNode<T>* first = nullptr;
+    ListNode<T> *first = nullptr;
     int number_of_nodes = 0;
 
 public:
     LinkedList<T>() = default;
+
     virtual ~LinkedList() {
         if (!first) {
             return;
         }
-        while(first->next) {
+        while (first->next) {
             first = first->next;
             first->prev->next = nullptr;
             delete first->prev;
@@ -37,8 +39,8 @@ public:
         delete first;
     }
 
-    ListNode<T>* insert_between(ListNode<T>* before, T node, ListNode<T>* after) {
-        ListNode<T>* to_insert = new ListNode<T>();
+    ListNode<T> *insert_between(ListNode<T> *before, T node, ListNode<T> *after) {
+        ListNode<T> *to_insert = new ListNode<T>();
         to_insert->data = node;
 
         if (before && !after) {
@@ -46,21 +48,18 @@ public:
             before->next = to_insert;
             to_insert->prev = before;
             to_insert->next = nullptr;
-        }
-        else if (!before && after) {
+        } else if (!before && after) {
             // insert to start of list
             to_insert->next = after;
             after->prev = to_insert;
             to_insert->prev = nullptr;
             first = to_insert;
-        }
-        else if (!before && !after) {
+        } else if (!before && !after) {
             // insert to empty list
             to_insert->next = nullptr;
             to_insert->prev = nullptr;
             first = to_insert;
-        }
-        else {
+        } else {
             // insert to middle of list
             before->next = to_insert;
             to_insert->prev = before;
@@ -73,36 +72,33 @@ public:
     }
 
     void print_list() {
-        ListNode<T>* temp = first;
+        ListNode<T> *temp = first;
 
         if (!temp) {
             return;
         }
 
-        while(temp->next) {
+        while (temp->next) {
             cout << temp->data << ",";
             temp = temp->next;
         }
         cout << temp->data << "," << endl;
     }
 
-    void remove_node(ListNode<T>* node) {
-        ListNode<T>* before = node->prev;
-        ListNode<T>* after = node->next;
+    void remove_node(ListNode<T> *node) {
+        ListNode<T> *before = node->prev;
+        ListNode<T> *after = node->next;
 
         if (!before && after) {
             // removing first node
             first = after;
-        }
-        else if (before && !after) {
+        } else if (before && !after) {
             // removing last node
             before->next = nullptr;
-        }
-        else if (!before && !after) {
+        } else if (!before && !after) {
             // removing only node
             first = nullptr;
-        }
-        else {
+        } else {
             // removing middle node
             before->next = after;
             after->prev = before;
@@ -116,14 +112,14 @@ public:
         return number_of_nodes;
     }
 
-    T* list_to_array() {
-        ListNode<T>* temp = first;
-        T* array = (T*) malloc(sizeof(T) * number_of_nodes);
-        for (int i=0; i<number_of_nodes; i++) {
+    T *list_to_array() {
+        ListNode<T> *temp = first;
+        T *array = (T *) malloc(sizeof(T) * number_of_nodes);
+        for (int i = 0; i < number_of_nodes; i++) {
             array[i] = temp->data;
             temp = temp->next;
         }
-
+        // TODO: should user allocate memory or is this fine?
         return array;
     }
 };

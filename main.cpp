@@ -8,23 +8,23 @@
 #include "LinkedList.h"
 
 int main() {
-    LinkedList<int> my_list;
-    my_list.print_list();
-    ListNode<int>* three = my_list.insert_between(nullptr, 3, nullptr);
-    my_list.print_list();
-    ListNode<int>* one = my_list.insert_between(three, 1, nullptr);
-    my_list.print_list();
-    ListNode<int>* fourty = my_list.insert_between(nullptr, 40, three);
-    my_list.print_list();
+//    LinkedList<int> my_list;
+//    my_list.print_list();
+//    ListNode<int>* three = my_list.insert_between(nullptr, 3, nullptr);
+//    my_list.print_list();
+//    ListNode<int>* one = my_list.insert_between(three, 1, nullptr);
+//    my_list.print_list();
+//    ListNode<int>* fourty = my_list.insert_between(nullptr, 40, three);
+//    my_list.print_list();
 //    my_list.remove_node(three);
 //    my_list.print_list();
-    int* arr = my_list.list_to_array();
-    int n = my_list.get_number_of_nodes();
-    for (int i=0; i<n; i++) {
-        cout << arr[i] << ",,";
-    }
-
-    return 1;
+//    int* arr = my_list.list_to_array();
+//    int n = my_list.get_number_of_nodes();
+//    for (int i=0; i<n; i++) {
+//        cout << arr[i] << ",,";
+//    }
+//
+//    return 1;
 
 //    world_cup_t my_world_cup;
 //    cout << my_world_cup.teams.get_tree_height() << endl;
@@ -40,19 +40,19 @@ int main() {
 //    cout << my_world_cup.teams.get_tree_height() << endl;
 
 
-    AVLTree<Player::Stats,shared_ptr<Player>> my_avl_tree;
+    AVLTree<Stats,shared_ptr<Player>> my_avl_tree;
     shared_ptr<Player> player1 = make_shared<Player>(3, 1, 0, 4, 1, false);
     shared_ptr<Player> player2 = make_shared<Player>(5, 1, 0, 5, 1, false);
     shared_ptr<Player> player3 = make_shared<Player>(8, 1, 0, 2, 0, false);
     shared_ptr<Player> player4 = make_shared<Player>(1, 1, 0, 5, 2, false);
     shared_ptr<Player> player5 = make_shared<Player>(33, 1, 0, 4, 0, false);
 
-    Player::Stats s1 = Player::Stats(*player1);
+    Stats s1 = Stats(*player1);
     my_avl_tree.insert(s1,player1);
-    my_avl_tree.insert(Player::Stats(*player2),player2);
-    my_avl_tree.insert(Player::Stats(*player3),player3);
-    my_avl_tree.insert(Player::Stats(*player4),player4);
-    my_avl_tree.insert(Player::Stats(*player5),player5);
+    my_avl_tree.insert(Stats(*player2),player2);
+    my_avl_tree.insert(Stats(*player3),player3);
+    my_avl_tree.insert(Stats(*player4),player4);
+    my_avl_tree.insert(Stats(*player5),player5);
     my_avl_tree.inorder();
     my_avl_tree.find(s1)->info->set_goals(12);
     my_avl_tree.inorder();
