@@ -42,6 +42,10 @@ AVLTree<int, shared_ptr<Player>>& Team::get_players() {
     return players;
 }
 
+AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
+    return players_score;
+}
+
 int calc_strength(shared_ptr<Node<int,shared_ptr<Player>>>& root,int *strength){
     if(!root) {
         return 0;

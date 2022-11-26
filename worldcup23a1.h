@@ -29,7 +29,7 @@ public: //private:
     AVLTree<int, shared_ptr<Team>> teams;
     AVLTree<int, shared_ptr<Team>> valid_teams;
     AVLTree<int, shared_ptr<Player>> all_players;
-    AVLTree<Stats, shared_ptr<Player>> all_players_score;
+        AVLTree<Stats, shared_ptr<Player>> all_players_score;
     shared_ptr<Player> top_scorer;
     int numOfPlayers = 0;
     int numOfTeams = 0;

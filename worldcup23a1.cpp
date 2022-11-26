@@ -7,7 +7,7 @@
 
 world_cup_t::world_cup_t() : teams(AVLTree<int, shared_ptr<Team>>()) {}
 
-world_cup_t::~world_cup_t() {}//are all necessary destructors being called?
+world_cup_t::~world_cup_t() = default;
 
 StatusType world_cup_t::add_team(int team_id, int points) {
     if (team_id <= 0 || points < 0)
@@ -53,13 +53,19 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 
     shared_ptr<Team> his_team = teams.find(teamId)->info;
     shared_ptr<Player> to_add = make_shared<Player>(playerId, his_team, gamesPlayed, goals, cards, goalKeeper);
+    Stats stats_to_add(*to_add);
     his_team->get_players().insert(playerId, to_add);
+    his_team->get_players_score().insert(stats_to_add, to_add);
+
+    all_players.insert(playerId, to_add);
+    all_players_score.insert(stats_to_add, to_add);
+
     if (his_team->get_number_of_players() >= VALID_SIZE && his_team->goalkeeper() &&
         !valid_teams.find(teamId)) {
         valid_teams.insert(teamId, his_team);
     }
-    all_players.insert(playerId, to_add);
-    //TODO: add next and prev check.
+
+    //TODO: add next and prev check for closest players.
 
     return StatusType::SUCCESS;
 }

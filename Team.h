@@ -51,6 +51,8 @@ public:
 
     AVLTree<int, shared_ptr<Player>>& get_players();
 
+    AVLTree<Stats, shared_ptr<Player>>& get_players_score();
+
     void update_strength();
 
     void set_points(int points);

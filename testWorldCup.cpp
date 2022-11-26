@@ -99,7 +99,8 @@ bool test_add_player_valid() {
     StatusType s1 = my_wc.add_team(111, 99);
     StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
     return s1==StatusType::SUCCESS && s2==StatusType::SUCCESS && my_wc.teams.get_nodes_count()==1 && my_wc.teams.get_tree_height()==0
-        && my_wc.all_players.get_nodes_count()==1 && my_wc.all_players.get_tree_height()==0;
+        && my_wc.all_players.get_nodes_count()==1 && my_wc.all_players.get_tree_height()==0
+        && my_wc.all_players_score.get_nodes_count()==1 && my_wc.all_players_score.get_tree_height()==0;
 }
 
 bool test_add_player_invalid_inputs() {
@@ -150,8 +151,8 @@ bool test_remove_player_valid() {
     StatusType s1 = my_wc.add_team(111, 99);
     StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
     StatusType s3 = my_wc.remove_player(2);
-    return s3==StatusType::SUCCESS; // && my_wc.teams.get_nodes_count()==1 && my_wc.all_players.get_nodes_count()==0
-    //&& my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==-1
+    return s3==StatusType::SUCCESS && my_wc.teams.get_nodes_count()==1 && my_wc.all_players.get_nodes_count()==0
+        && my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==-1;
 }
 
 bool test_remove_player_invalid_id() {
