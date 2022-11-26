@@ -11,7 +11,7 @@ class Team;
 
 class Stats;
 class Player {
-    int player_id;
+    int id;
     shared_ptr<Team> his_team;
     int games_played;
     int goals;
@@ -23,7 +23,7 @@ class Player {
     friend class Stats;
 
 public:
-    Player(int player_id, shared_ptr<Team>& his_team, int games_played, int goals, int cards, bool goalkeeper);
+    Player(int id, shared_ptr<Team> team, int games_played, int goals, int cards, bool goalkeeper);
 
     int get_games_played();
 
@@ -54,7 +54,7 @@ class Stats{
 
 public:
     //Stats(shared_ptr<int>& player_id,shared_ptr<int>& goals,shared_ptr<int>& cards):player_id(player_id), goals(goals), cards(cards){}
-    Stats(Player &player) : player_id(&player.player_id), goals(&player.goals), cards(&player.cards) {}
+    Stats(Player &player) : player_id(&player.id), goals(&player.goals), cards(&player.cards) {}
 
     Stats &operator=(const Stats &other) {
         if (this != &other) {

@@ -1,27 +1,27 @@
 //
 // Created by Yotam on 22/11/2022.
 //
-
 #ifndef WORLDCUP_AVLTREE_H
 #define WORLDCUP_AVLTREE_H
-
 
 #include <memory>
 #include <iostream>
 
 using namespace std;
-template<class Key, class Info>
-class Node{
-public:
-    Key key;
-    Info info;
-    shared_ptr<Node<Key, Info>> left;
-    shared_ptr<Node<Key, Info>> right;
-    int height = 0;
 
-    Node(const Key &key, const Info &info):key(key), info(info),left(nullptr),right(nullptr),height(0){}
-    Node() = default;
+template<class Key , class Info>
+class Node {
+    public:
+        Key key;
+        Info info;
+        shared_ptr<Node<Key, Info>> left;
+        shared_ptr<Node<Key, Info>> right;
+        int height;
 
+        Node(const Key &key, const Info &info):
+            key(key), info(info), left(nullptr), right(nullptr), height(0) {}
+
+        Node() = default;
 };
 
 class KeyAlreadyExists : public std::exception {
@@ -39,24 +39,25 @@ public:
 };
 
 template<class Key, class Info>
-class AVLTree{
+class AVLTree {
 private:
     shared_ptr<Node<Key,Info>> root;
-    int number_of_nodes = 0;
+    int nodes_count = 0;
 
-    static int get_height(shared_ptr<Node<Key, Info>>& root){
-        if(!root){
+    static int get_height(shared_ptr<Node<Key, Info>>& root) {
+        if(!root) {
             return -1;
         }
+
         return root->height;
     }
 
-    static int get_balance_factor(shared_ptr<Node<Key,Info>>& root){
 
+    static int get_balance_factor(shared_ptr<Node<Key,Info>>& root) {
         return get_height(root->left) - get_height(root->right);
     }
 
-    static void insert_rec(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info){
+    void insert_rec(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info){
         if(!root){
             root = make_shared<Node<Key,Info>>(Node<Key,Info>(key,info));
         }
@@ -66,11 +67,12 @@ private:
         else if(root->key < key){
             insert_rec(root->right,key,info);
         }
-        else {// root->key == key
+        else { // root->key == key
             throw KeyAlreadyExists();
         }
+
         balance(root);
-        root->height = 1+max(get_height(root->left), get_height(root->right));
+        root->height = 1 + max(get_height(root->left), get_height(root->right));
     };
 
     static void remove_rec(shared_ptr<Node<Key,Info>>& root, const Key &key) {
@@ -86,11 +88,14 @@ private:
             remove_rec(root->right,key);
             root->height = 1 + max(get_height(root->left), get_height(root->right));
         }
-        else {   // reached node to remove: root->key == key
-            // removed node is leaf
-            if (!root->left && !root->right) {
+        else {   // root->key == key
+            if (!root->left && !root->right) { // TODO: Export condition to function `isLeaf(Node)`
                 root.reset();
             }
+//            else if (root-> left && root-> right) {}
+//            else if (!root-> left && !root -> right) {}
+//            else if (root -> right) {}
+//            else {}
             // removed node has only left son
             else if (root->left && !root->right) {
                 root = root->left;
@@ -121,9 +126,11 @@ private:
 
     static shared_ptr<Node<Key,Info>> get_prev(shared_ptr<Node<Key,Info>>& root) {
         root = root->left;
+
         while (root->right) {
             root = root->right;
         }
+
         return root;
     }
 
@@ -161,18 +168,20 @@ private:
         if(!root){
             return;
         }
+
         int bf = get_balance_factor(root);
-        if(bf == 2){
-            if(get_balance_factor(root->left) > -1){ // left bf == 1
+
+        if(bf == 2) {
+            if(get_balance_factor(root->left) > -1) { // left bf == 1
                 LL_rotate(root);
             }
-            else if(get_balance_factor(root->left)==-1){
+            else if(get_balance_factor(root->left) == -1) {
                 //LR rotation
                 RR_rotate(root->left);
                 LL_rotate(root);
             }
         }
-        else if(bf==-2){
+        else if(bf == -2) {
             if(get_balance_factor(root->right)<1) { // right bf == -1
                 RR_rotate(root);
             }
@@ -201,24 +210,30 @@ private:
         if(!root) {
             return;
         }
+
         print_inorder(root->left);
         std::cout << (root->key) << ", ";
         print_inorder(root->right);
     }
 
 public:
-    AVLTree(Key key, Info info) : root(nullptr),number_of_nodes(0){}
-    explicit AVLTree(std::shared_ptr<Node<Key,Info>>& root): root(root), number_of_nodes(0){}
-    AVLTree() = default;
+    AVLTree() : root(nullptr), nodes_count(0){}
+    //TODO: Remove
+    // explicit AVLTree(shared_ptr<Node<Key,Info>>& root): root(root), nodes_count(0){}
+
+    shared_ptr<Node<Key,Info>>& get_root() {
+        return root;
+    }
+
     ~AVLTree() = default;
     void insert(const Key &key,const Info &info){
         insert_rec(root, key,info);
-        number_of_nodes++;
+        nodes_count++;
     }
 
     void remove(const Key &key){
         remove_rec(root, key);
-        number_of_nodes--;
+        nodes_count--;
     }
 
     void inorder() {
@@ -243,10 +258,9 @@ public:
         return get_height(root);
     }
 
-    int get_number_of_nodes() {
-        return number_of_nodes;
+    int get_nodes_count() {
+        return nodes_count;
     }
 };
-
 
 #endif //WORLDCUP_AVLTREE_H

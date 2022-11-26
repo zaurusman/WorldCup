@@ -22,9 +22,12 @@ class Team {
     int total_goals;
     int total_cards;
     int games_played;
-    int top_scorer_id;
+    int top_scorer_id; // TODO: Player top_scorer, remove top_scorer_name also
     char *top_scorer_name;
     bool has_goalkeeper = false;
+    int strength = 0;
+
+    //static int calc_strength(shared_ptr<Node<int, shared_ptr<Player>>& root);
 
 public:
     Team() = default;
@@ -38,12 +41,19 @@ public:
 
     int get_games_played();
 
+    void add_games_played(int games);
+
     int get_number_of_players();
+
+    int get_strength();
 
     bool goalkeeper();
 
     AVLTree<int, shared_ptr<Player>>& get_players();
 
+    void update_strength();
+
+    void set_points(int points);
 };
 
 
