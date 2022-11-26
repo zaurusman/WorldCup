@@ -18,7 +18,7 @@ Player::Player(int id, shared_ptr<Team>& team, int games_played, int goals, int 
 
 
 int Player::get_games_played() {
-    return games_played + his_team->get_games_played() - games_team_played_without;
+    return games_played + team->get_games_played() - games_team_played_without;
 }
 
 void Player::set_games_played(int games_played) {

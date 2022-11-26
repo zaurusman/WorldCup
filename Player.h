@@ -12,7 +12,7 @@ class Team;
 class Stats;
 class Player {
     int id;
-    shared_ptr<Team> his_team;
+    shared_ptr<Team> team;
     int games_played;
     int goals;
     int cards;
@@ -23,7 +23,7 @@ class Player {
     friend class Stats;
 
 public:
-    Player(int id, shared_ptr<Team> team, int games_played, int goals, int cards, bool goalkeeper);
+    Player(int id, shared_ptr<Team>& team, int games_played, int goals, int cards, bool goalkeeper);
 
     int get_games_played();
 

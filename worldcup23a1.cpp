@@ -72,9 +72,10 @@ StatusType world_cup_t::remove_player(int playerId) {
         return StatusType::FAILURE;
     }
     try {
-        all_players.find(playerId)->info->get_team()->get_players().remove(playerId);
+        shared_ptr<Team> his_team = all_players.find(playerId)->info->get_team();
+        his_team->get_players().remove(playerId);
         all_players.remove(playerId);
-        all_players.find(playerId)->info->get_team()->update_strength();
+        his_team->update_strength();
         //TODO: update the other trees as necessary.
 
     }
