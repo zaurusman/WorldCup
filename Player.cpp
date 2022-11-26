@@ -4,14 +4,13 @@
 
 #include "Player.h"
 
-Player::Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper):
+Player::Player(int player_id, shared_ptr<Team>& his_team, int games_played, int goals, int cards, bool goalkeeper):
     player_id(player_id),
-    team_id(team_id),
+    his_team(his_team),
     games_played(games_played),
     goals(goals),
     cards(cards),
     goalkeeper(goalkeeper),
-    his_team(nullptr),
     games_team_played_without(0),
     next_closest(nullptr),
     prev_closest(nullptr)
@@ -44,6 +43,6 @@ int Player::get_goals() {
 int Player::get_cards() {
     return cards;
 }
-Team* Player::get_team() {
+shared_ptr<Team>& Player::get_team() {
     return his_team;
 }

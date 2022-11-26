@@ -52,7 +52,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     }
 
     shared_ptr<Team> his_team = teams.find(teamId)->info;
-    shared_ptr<Player> to_add = make_shared<Player>(playerId, teamId, gamesPlayed, goals, cards, goalKeeper);
+    shared_ptr<Player> to_add = make_shared<Player>(playerId, his_team, gamesPlayed, goals, cards, goalKeeper);
     his_team->get_players().insert(playerId, to_add);
     if (his_team->get_number_of_players() >= VALID_SIZE && his_team->goalkeeper() &&
         !valid_teams.find(teamId)) {
@@ -67,6 +67,9 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 StatusType world_cup_t::remove_player(int playerId) {
     if (playerId <= 0) {
         return StatusType::INVALID_INPUT;
+    }
+    if (!all_players.does_exist(playerId)) {
+        return StatusType::FAILURE;
     }
     try {
         all_players.find(playerId)->info->get_team()->get_players().remove(playerId);

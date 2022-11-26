@@ -150,25 +150,32 @@ bool test_remove_player_valid() {
     StatusType s1 = my_wc.add_team(111, 99);
     StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
     StatusType s3 = my_wc.remove_player(2);
-    return s3==StatusType::SUCCESS && my_wc.teams.get_number_of_nodes()==0 && my_wc.all_players.get_number_of_nodes()==0
-        && my_wc.teams.get_tree_height()==-1 && my_wc.all_players.get_tree_height()==-1;
+    return s3==StatusType::SUCCESS && my_wc.teams.get_number_of_nodes()==1 && my_wc.all_players.get_number_of_nodes()==0
+        && my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==-1;
 }
 
 bool test_remove_player_invalid_id() {
-//    world_cup_t my_wc;
-//    StatusType s1 = my_wc.add_team(111, 99);
-//    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
-//    StatusType s3 = my_wc.remove_player(2);
-//    return s3==StatusType::SUCCESS && my_wc.teams.get_number_of_nodes()==0 && my_wc.all_players.get_number_of_nodes()==0
-//           && my_wc.teams.get_tree_height()==-1 && my_wc.all_players.get_tree_height()==-1;
+    world_cup_t my_wc;
+    StatusType s1 = my_wc.add_team(111, 99);
+    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
+    StatusType s3 = my_wc.remove_player(-2);
+    return s3==StatusType::INVALID_INPUT && my_wc.teams.get_number_of_nodes()==1 && my_wc.all_players.get_number_of_nodes()==1
+           && my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==0;
+}
+
+bool test_remove_player_no_player() {
+    world_cup_t my_wc;
+    StatusType s1 = my_wc.add_team(111, 99);
+    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
+    StatusType s3 = my_wc.remove_player(3);
+    return s3==StatusType::FAILURE && my_wc.teams.get_number_of_nodes()==1 && my_wc.all_players.get_number_of_nodes()==1
+           && my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==0;
 }
 
 bool test_remove_player() {
-    // valid remove player
     RUN_TEST(test_remove_player_valid);
-    // invalid id
     RUN_TEST(test_remove_player_invalid_id);
-    // no such player
+    RUN_TEST(test_remove_player_no_player);
 }
 
 bool test_world_cup() {
@@ -176,7 +183,7 @@ bool test_world_cup() {
     RUN_TEST_GROUP(test_remove_team);
     RUN_TEST_GROUP(test_add_player);
     RUN_TEST_GROUP(test_remove_player);
-    // test next function remove_player
+//    RUN_TEST_GROUP(test_update_player_stats);
 }
 
 int main() {

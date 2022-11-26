@@ -12,19 +12,18 @@ class Team;
 class Stats;
 class Player {
     int player_id;
-    int team_id;
+    shared_ptr<Team> his_team;
     int games_played;
     int goals;
     int cards;
     bool goalkeeper;
-    Team *his_team;
     int games_team_played_without;
     Player *next_closest;
     Player *prev_closest;
     friend class Stats;
 
 public:
-    Player(int player_id, int team_id, int games_played, int goals, int cards, bool goalkeeper);
+    Player(int player_id, shared_ptr<Team>& his_team, int games_played, int goals, int cards, bool goalkeeper);
 
     int get_games_played();
 
@@ -40,7 +39,7 @@ public:
 
     int get_cards();
 
-    Team *get_team();
+    shared_ptr<Team>& get_team();
 };
 
 class Stats{
