@@ -139,12 +139,32 @@ bool test_add_player_no_team() {
     return s1==StatusType::FAILURE;
 }
 
+bool test_add_player_becomes_valid() {
+    world_cup_t my_wc;
+    StatusType s1 = my_wc.add_team(111, 99);
+    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
+    StatusType s3 = my_wc.add_player(3, 111, 0, 0, 0, false);
+    StatusType s4 = my_wc.add_player(4, 111, 0, 0, 0, false);
+    StatusType s5 = my_wc.add_player(5, 111, 0, 0, 0, false);
+    StatusType s6 = my_wc.add_player(6, 111, 0, 0, 0, false);
+    StatusType s7 = my_wc.add_player(7, 111, 0, 0, 0, false);
+    StatusType s8 = my_wc.add_player(8, 111, 0, 0, 0, false);
+    StatusType s9 = my_wc.add_player(9, 111, 0, 0, 0, false);
+    StatusType s10 = my_wc.add_player(10, 111, 0, 0, 0, false);
+    StatusType s11 = my_wc.add_player(1, 111, 0, 0, 0, false);
+    bool no_players = my_wc.valid_teams.get_nodes_count()==0;
+    StatusType s12 = my_wc.add_player(11, 111, 0, 0, 0, false);
+    bool no_keeper = my_wc.valid_teams.get_nodes_count()==0;
+    StatusType s13 = my_wc.add_player(111, 111, 0, 0, 0, true);
+    return my_wc.valid_teams.get_nodes_count()==1 && no_players && no_keeper;
+}
+
 void test_add_player() {
-    // TODO: add tests related to team fields affected by add / remove
     RUN_TEST(test_add_player_valid);
     RUN_TEST(test_add_player_invalid_inputs);
     RUN_TEST(test_add_player_exists);
     RUN_TEST(test_add_player_no_team);
+    RUN_TEST(test_add_player_becomes_valid);
 }
 
 bool test_remove_player_valid() {
@@ -180,8 +200,39 @@ void test_remove_player() {
     RUN_TEST(test_remove_player_no_player);
 }
 
+bool test_update_player_stats_valid() {
+    world_cup_t my_wc;
+    StatusType s1 = my_wc.add_team(111, 99);
+    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
+    StatusType s3 = my_wc.update_player_stats(2, 3, 4, 5);
+    return s3==StatusType::SUCCESS && my_wc.all_players.get_root()->info->get_games_played() == 3
+        && my_wc.all_players.get_root()->info->get_cards() == 5 && my_wc.all_players.get_root()->info->get_goals() == 4;
+}
+
+bool test_update_player_stats_invalid() {
+    world_cup_t my_wc;
+    StatusType s1 = my_wc.add_team(111, 99);
+    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
+    StatusType s3 = my_wc.update_player_stats(2, 3, 4, -5);
+    StatusType s4 = my_wc.update_player_stats(2, 3, -4, 5);
+    StatusType s5 = my_wc.update_player_stats(2, -3, 4, 5);
+    return s3==StatusType::INVALID_INPUT && s4==StatusType::INVALID_INPUT && s5==StatusType::INVALID_INPUT && my_wc.all_players.get_root()->info->get_games_played() == 0
+           && my_wc.all_players.get_root()->info->get_cards() == 0 && my_wc.all_players.get_root()->info->get_goals() == 0;
+}
+
+bool test_update_player_stats_no_player() {
+    world_cup_t my_wc;
+    StatusType s1 = my_wc.add_team(111, 99);
+    StatusType s2 = my_wc.add_player(2, 111, 0, 0, 0, false);
+    StatusType s3 = my_wc.update_player_stats(333, 3, 4, 5);
+    return s3==StatusType::FAILURE && my_wc.all_players.get_root()->info->get_games_played() == 0
+           && my_wc.all_players.get_root()->info->get_cards() == 0 && my_wc.all_players.get_root()->info->get_goals() == 0;
+}
+
 void test_update_player_stats() {
-    //
+    RUN_TEST(test_update_player_stats_valid);
+    RUN_TEST(test_update_player_stats_invalid);
+    RUN_TEST(test_update_player_stats_no_player);
 }
 
 

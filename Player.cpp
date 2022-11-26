@@ -22,15 +22,15 @@ int Player::get_games_played() {
 }
 
 void Player::add_games_played(int games_played) {
-    games_played += games_played;
+    this->games_played += games_played;
 }
 
 void Player::add_goals(int goals) {
-    goals += goals;
+    this->goals += goals;
 }
 
 void Player::add_cards(int cards) {
-    cards += cards;
+    this->cards += cards;
 }
 
 int Player::get_id() {
@@ -43,6 +43,11 @@ int Player::get_goals() {
 int Player::get_cards() {
     return cards;
 }
+
+bool Player::is_goalkeeper() {
+    return goalkeeper;
+}
+
 shared_ptr<Team>& Player::get_team() {
     return team;
 }

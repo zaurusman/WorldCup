@@ -46,8 +46,16 @@ shared_ptr<Player>& Team::get_top_scorer() {
     return top_scorer;
 }
 
-bool Team::goalkeeper(){
-    return has_goalkeeper;
+int Team::get_goalkeepers(){
+    return goalkeepers;
+}
+
+void Team::add_goalkeeper(int goalkeeper) {
+    goalkeepers += goalkeeper;
+}
+
+bool Team::has_goalkeeper() {
+    return goalkeepers > 0;
 }
 
 void Team::add_total_goals(int goals) {

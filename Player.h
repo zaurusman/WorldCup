@@ -39,6 +39,8 @@ public:
 
     int get_cards();
 
+    bool is_goalkeeper();
+
     shared_ptr<Team>& get_team();
 };
 

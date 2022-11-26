@@ -15,7 +15,7 @@ StatusType world_cup_t::add_team(int team_id, int points) {
     try {
         shared_ptr<Team> new_team(new Team(team_id, points));
         teams.insert(team_id, new_team);
-        valid_teams.insert(team_id, new_team);
+        // should not add to valid teams when team has no players
     } catch (const KeyAlreadyExists &e) {
         return StatusType::FAILURE;
     } catch (const std::bad_alloc &e) {
@@ -63,13 +63,17 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     all_players.insert(playerId, to_add);
     all_players_score.insert(stats_to_add, to_add);
 
-    if (his_team->get_players_count() >= VALID_SIZE && his_team->goalkeeper() &&
+    if (goalKeeper) {
+        his_team->add_goalkeeper(1);
+    }
+    if (his_team->get_players_count() >= VALID_SIZE && his_team->has_goalkeeper() &&
         !valid_teams.does_exist(teamId)) {
         valid_teams.insert(teamId, his_team);
     }
 
     his_team->add_total_goals(added_goals);
     his_team->add_total_cards(added_cards);
+
 
     //TODO: add next and prev check for closest players, and top_scorer
 
@@ -90,18 +94,22 @@ StatusType world_cup_t::remove_player(int playerId) {//TODO: add check for top_s
         Stats stats_to_remove(*player_to_remove);
         int removed_goals = player_to_remove->get_goals();
         int removed_cards = player_to_remove->get_cards();
+        bool goalkeeper = player_to_remove->is_goalkeeper();
 
         all_players.remove(playerId);
         all_players_score.remove(stats_to_remove);
         his_team->get_players().remove(playerId);
         his_team->get_players_score().remove(stats_to_remove);
-        if ((his_team->get_players_count() < VALID_SIZE || !his_team->goalkeeper()) &&
+        if ((his_team->get_players_count() < VALID_SIZE || !his_team->has_goalkeeper()) &&
             valid_teams.does_exist(his_team->get_id())) {
             valid_teams.remove(his_team->get_id());
         }
 
         his_team->add_total_goals(-1 * removed_goals);
         his_team->add_total_cards(-1 * removed_cards);
+        if (goalkeeper) {
+            his_team->add_goalkeeper(-1);
+        }
     }
     catch (const KeyDoesNotExist &e) {
         return StatusType::FAILURE;
@@ -114,7 +122,7 @@ StatusType world_cup_t::remove_player(int playerId) {//TODO: add check for top_s
 
 StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
                                             int scoredGoals, int cardsReceived) {
-    if (playerId <= 0 || gamesPlayed < 0 || scoredGoals < 0) {
+    if (playerId <= 0 || gamesPlayed < 0 || scoredGoals < 0 || cardsReceived < 0) {
         return StatusType::INVALID_INPUT;
     }
     try {

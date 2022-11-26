@@ -19,13 +19,11 @@ private:
     int points;
     AVLTree<int, shared_ptr<Player>> players;
     AVLTree<Stats, shared_ptr<Player>> players_score;
-    int total_goals;
-    int total_cards;
-    int games_played;
+    int total_goals = 0;
+    int total_cards = 0;
+    int games_played = 0;
     shared_ptr<Player> top_scorer;
-    bool has_goalkeeper = false;
-
-    //static int calc_strength(shared_ptr<Node<int, shared_ptr<Player>>& root);
+    int goalkeepers = 0;
 
 public:
     Team() = default;
@@ -51,7 +49,11 @@ public:
 
     shared_ptr<Player>& get_top_scorer();
 
-    bool goalkeeper();
+    int get_goalkeepers();
+
+    void add_goalkeeper(int goalkeeper);
+
+    bool has_goalkeeper();
 
     void add_total_goals(int goals);
 
