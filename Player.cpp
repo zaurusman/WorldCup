@@ -11,14 +11,14 @@ Player::Player(int id, shared_ptr<Team>& team, int games_played, int goals, int 
     goals(goals),
     cards(cards),
     goalkeeper(goalkeeper),
-    games_team_played_without(0),
+    games_not_played(0),
     next_closest(nullptr),
     prev_closest(nullptr)
 {}
 
 
 int Player::get_games_played() {
-    return games_played + team->get_games_played() - games_team_played_without;
+    return games_played + team->get_games_played() - games_not_played;
 }
 
 void Player::add_games_played(int games_played) {
@@ -46,6 +46,10 @@ int Player::get_cards() {
 
 bool Player::is_goalkeeper() {
     return goalkeeper;
+}
+
+void Player::set_games_not_played(int games_not_played) {
+    this->games_not_played = games_not_played;
 }
 
 shared_ptr<Team>& Player::get_team() {

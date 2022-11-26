@@ -89,6 +89,6 @@ AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
 //
 
 void Team::add_points(int points) {
-    points+=points;
+    this->points+=points;
 }
 

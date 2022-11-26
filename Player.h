@@ -17,7 +17,7 @@ class Player {
     int goals;
     int cards;
     bool goalkeeper;
-    int games_team_played_without;
+    int games_not_played = 0;
     Player *next_closest;
     Player *prev_closest;
     friend class Stats;
@@ -40,6 +40,8 @@ public:
     int get_cards();
 
     bool is_goalkeeper();
+
+    void set_games_not_played(int games_not_played);
 
     shared_ptr<Team>& get_team();
 };

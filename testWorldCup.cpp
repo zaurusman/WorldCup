@@ -235,6 +235,99 @@ void test_update_player_stats() {
     RUN_TEST(test_update_player_stats_no_player);
 }
 
+bool test_play_match_win() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 99);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 0, 0, 0, false);
+    my_wc.add_player(3, 111, 0, 0, 0, false);
+    my_wc.add_player(4, 111, 0, 0, 0, false);
+    my_wc.add_player(5, 111, 0, 0, 0, false);
+    my_wc.add_player(6, 111, 0, 0, 0, false);
+    my_wc.add_player(7, 111, 0, 0, 0, false);
+    my_wc.add_player(8, 111, 0, 0, 0, false);
+    my_wc.add_player(9, 111, 0, 0, 0, false);
+    my_wc.add_player(10, 111, 0, 0, 0, false);
+    my_wc.add_player(11, 111, 0, 0, 0, true);
+
+    my_wc.add_team(11, 50);
+    my_wc.add_player(80, 11, 0, 0, 0, false);
+    my_wc.add_player(12, 11, 0, 0, 0, false);
+    my_wc.add_player(13, 11, 0, 0, 0, false);
+    my_wc.add_player(14, 11, 0, 0, 0, false);
+    my_wc.add_player(15, 11, 0, 0, 0, false);
+    my_wc.add_player(16, 11, 0, 0, 0, false);
+    my_wc.add_player(17, 11, 0, 0, 0, false);
+    my_wc.add_player(18, 11, 0, 0, 0, false);
+    my_wc.add_player(19, 11, 0, 0, 0, false);
+    my_wc.add_player(110, 11, 0, 0, 0, false);
+    my_wc.add_player(111, 11, 0, 0, 0, true);
+
+    StatusType s1 = my_wc.play_match(11, 111);
+    StatusType s2 = my_wc.play_match(111, 11);
+    my_wc.add_player(999, 11, 0, 0, 0, true);
+    int eee = 111; int ee = 11; int n = 999;
+
+    return s1 == StatusType::SUCCESS && s2 == StatusType::SUCCESS && my_wc.teams.find(eee)->info->get_points() == 105
+        && my_wc.teams.find(ee)->info->get_points() == 50 && my_wc.all_players.find(ee)->info->get_games_played() == 2
+        && my_wc.all_players.find(n)->info->get_games_played() == 0;
+}
+
+bool test_play_match_tie() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 0, 0, 0, false);
+    my_wc.add_player(3, 111, 0, 0, 0, false);
+    my_wc.add_player(4, 111, 0, 0, 0, false);
+    my_wc.add_player(5, 111, 0, 0, 0, false);
+    my_wc.add_player(6, 111, 0, 0, 0, false);
+    my_wc.add_player(7, 111, 0, 0, 0, false);
+    my_wc.add_player(8, 111, 0, 0, 0, false);
+    my_wc.add_player(9, 111, 0, 0, 0, false);
+    my_wc.add_player(10, 111, 0, 0, 0, false);
+    my_wc.add_player(11, 111, 0, 0, 0, true);
+
+    my_wc.add_team(11, 50);
+    my_wc.add_player(80, 11, 0, 0, 0, false);
+    my_wc.add_player(12, 11, 0, 0, 0, false);
+    my_wc.add_player(13, 11, 0, 0, 0, false);
+    my_wc.add_player(14, 11, 0, 0, 0, false);
+    my_wc.add_player(15, 11, 0, 0, 0, false);
+    my_wc.add_player(16, 11, 0, 0, 0, false);
+    my_wc.add_player(17, 11, 0, 0, 0, false);
+    my_wc.add_player(18, 11, 0, 0, 0, false);
+    my_wc.add_player(19, 11, 0, 0, 0, false);
+    my_wc.add_player(110, 11, 0, 0, 0, false);
+    my_wc.add_player(111, 11, 0, 0, 0, true);
+
+    StatusType s1 = my_wc.play_match(11, 111);
+    StatusType s2 = my_wc.play_match(111, 11);
+    int eee = 111;
+    int ee = 11;
+    return s1 == StatusType::SUCCESS && s2 == StatusType::SUCCESS && my_wc.teams.find(eee)->info->get_points() == 52
+           && my_wc.teams.find(ee)->info->get_points() == 52;
+}
+
+bool test_play_match_invalid_input() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(11, 50);
+    StatusType s1 = my_wc.play_match(-11, 111);
+    StatusType s2 = my_wc.play_match(-111, 11);
+    StatusType s3 = my_wc.play_match(11, 11);
+    StatusType s4 = my_wc.play_match(10, 11);
+    StatusType s5 = my_wc.play_match(11, 10);
+    StatusType s6 = my_wc.play_match(111, 11);
+    return s1 == StatusType::INVALID_INPUT && s2 == StatusType::INVALID_INPUT && s3 == StatusType::INVALID_INPUT
+        && s4 == StatusType::FAILURE && s5 == StatusType::FAILURE && s6 == StatusType::FAILURE;
+}
+
+void test_play_match() {
+    RUN_TEST(test_play_match_win);
+    RUN_TEST(test_play_match_tie);
+    RUN_TEST(test_play_match_invalid_input);
+}
 
 void test_world_cup() {
     RUN_TEST_GROUP(test_add_team);
@@ -242,6 +335,7 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_add_player);
     RUN_TEST_GROUP(test_remove_player);
     RUN_TEST_GROUP(test_update_player_stats);
+    RUN_TEST_GROUP(test_play_match);
 }
 
 int main() {
