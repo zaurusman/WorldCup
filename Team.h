@@ -43,9 +43,11 @@ public:
 
     void add_games_played(int games);
 
-    int get_number_of_players();
+    int get_players_count();
 
     int get_strength();
+
+    int get_points();
 
     bool goalkeeper();
 
@@ -59,7 +61,7 @@ public:
 
 //    void update_strength();
 
-    void set_points(int points);
+    void add_points(int points);
 };
 
 

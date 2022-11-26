@@ -7,8 +7,11 @@
 #include "AVLTree.h"
 #include "LinkedList.h"
 
-int main2() {
-//    LinkedList<int> my_list;
+int main() {
+    LinkedList<int> my_list1;
+    LinkedList<int> my_list2;
+//    ListNode<int> one = my_list1.insert_between(nullptr,1,nullptr);
+
 //    my_list.print_list();
 //    ListNode<int>* three = my_list.insert_between(nullptr, 3, nullptr);
 //    my_list.print_list();

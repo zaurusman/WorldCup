@@ -11,7 +11,7 @@ Team::Team(int team_id, int points):
 {}
 
 bool Team::is_empty() {
-    return get_number_of_players() == 0;
+    return get_players_count() == 0;
 }
 
 int Team::get_id() {
@@ -19,7 +19,7 @@ int Team::get_id() {
 }
 
 int Team::get_team_power() {
-    return points + get_number_of_players() * (total_goals - total_cards);
+    return points + get_players_count() * (total_goals - total_cards);
 }
 
 int Team::get_games_played() {
@@ -30,12 +30,16 @@ void Team::add_games_played(int games){
     games_played +=games;
 }
 
-int Team::get_number_of_players() {
+int Team::get_players_count() {
     return players.get_nodes_count();
 }
 
-int Team::get_strength() {
+int Team::get_strength() { //TODO: what is it for?
     return points + total_goals - total_cards;
+}
+
+int Team::get_points() {
+    return points;
 }
 
 bool Team::goalkeeper(){
@@ -72,7 +76,7 @@ AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
 //}
 //
 
-void Team::set_points(int points) {
+void Team::add_points(int points) {
     points+=points;
 }
 

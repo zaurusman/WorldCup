@@ -19,6 +19,7 @@ struct ListNode {
 
 template<class T>
 class LinkedList {
+private:
     ListNode<T> *first = nullptr;
     int number_of_nodes = 0;
 

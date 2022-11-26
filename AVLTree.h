@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <iostream>
+#include "LinkedList.h"
 
 using namespace std;
 
@@ -40,6 +41,61 @@ public:
 
 template<class Key, class Info>
 class AVLTree {
+public:
+    AVLTree() : root(nullptr), nodes_count(0){}
+    //TODO: Remove
+    // explicit AVLTree(shared_ptr<Node<Key,Info>>& root): root(root), nodes_count(0){}
+
+    shared_ptr<Node<Key,Info>>& get_root() {
+        return root;
+    }
+
+    ~AVLTree() = default;
+    void insert(const Key &key,const Info &info){
+        insert_rec(root, key,info);
+        nodes_count++;
+    }
+
+    void remove(const Key &key){
+        remove_rec(root, key);
+        nodes_count--;
+    }
+
+    void inorder() {
+        print_inorder(root);
+        std::cout << std::endl;
+    }
+
+    shared_ptr<Node<Key,Info>> find(Key& key){
+        return find_rec(root,key);
+    }
+
+    bool does_exist(Key key) {
+        try {
+            find(key);
+        } catch (KeyDoesNotExist &e) {
+            return false;
+        }
+        return true;
+    }
+
+    int get_tree_height(){
+        return get_height(root);
+    }
+
+    int get_nodes_count() {
+        return nodes_count;
+    }
+
+    static void AVL_to_list_inorder(shared_ptr<Node<Key,Info>>& root,LinkedList<Node<Key,Info>>& out) {
+        if(!root) {
+            return;
+        }
+        AVL_to_list_inorder(root->right,out);
+        out.push_front(*root);
+        AVL_to_list_inorder(root->left,out);
+    }
+
 private:
     shared_ptr<Node<Key,Info>> root;
     int nodes_count = 0;
@@ -75,7 +131,7 @@ private:
         root->height = 1 + max(get_height(root->left), get_height(root->right));
     };
 
-    static void remove_rec(shared_ptr<Node<Key,Info>>& root, const Key &key) {
+    void remove_rec(shared_ptr<Node<Key,Info>>& root, const Key &key) {
         if (!root) {
             throw KeyDoesNotExist();
         }
@@ -96,17 +152,17 @@ private:
 //            else if (!root-> left && !root -> right) {}
 //            else if (root -> right) {}
 //            else {}
-            // removed node has only left son
+                // removed node has only left son
             else if (root->left && !root->right) {
                 root = root->left;
             }
-            // removed node has only right son
+                // removed node has only right son
             else if (!root->left && root->right) {
                 root = root->right;
             }
-            // removed node has both sons
+                // removed node has both sons
             else {
-                shared_ptr<Node<Key,Info>> next = get_next(root);
+                shared_ptr<Node<Key,Info>> next = get_next_inorder(root);
                 root->key = next->key;
                 root->info = next-> info;
                 remove_rec(root->right, next->key);
@@ -116,7 +172,7 @@ private:
         balance(root);
     }
 
-    static shared_ptr<Node<Key,Info>> get_next(shared_ptr<Node<Key,Info>>& root) {
+    shared_ptr<Node<Key,Info>> get_next_inorder(shared_ptr<Node<Key,Info>>& root) {
         root = root->right;
         while (root->left) {
             root = root->left;
@@ -124,7 +180,7 @@ private:
         return root;
     }
 
-    static shared_ptr<Node<Key,Info>> get_prev(shared_ptr<Node<Key,Info>>& root) {
+    shared_ptr<Node<Key,Info>> get_prev_inorder(shared_ptr<Node<Key,Info>>& root) {
         root = root->left;
 
         while (root->right) {
@@ -216,51 +272,7 @@ private:
         print_inorder(root->right);
     }
 
-public:
-    AVLTree() : root(nullptr), nodes_count(0){}
-    //TODO: Remove
-    // explicit AVLTree(shared_ptr<Node<Key,Info>>& root): root(root), nodes_count(0){}
 
-    shared_ptr<Node<Key,Info>>& get_root() {
-        return root;
-    }
-
-    ~AVLTree() = default;
-    void insert(const Key &key,const Info &info){
-        insert_rec(root, key,info);
-        nodes_count++;
-    }
-
-    void remove(const Key &key){
-        remove_rec(root, key);
-        nodes_count--;
-    }
-
-    void inorder() {
-        print_inorder(root);
-        std::cout << std::endl;
-    }
-
-    shared_ptr<Node<Key,Info>> find(Key& key){
-        return find_rec(root,key);
-    }
-
-    bool does_exist(Key key) {
-        try {
-            find(key);
-        } catch (KeyDoesNotExist &e) {
-            return false;
-        }
-        return true;
-    }
-
-    int get_tree_height(){
-        return get_height(root);
-    }
-
-    int get_nodes_count() {
-        return nodes_count;
-    }
 };
 
 #endif //WORLDCUP_AVLTREE_H
