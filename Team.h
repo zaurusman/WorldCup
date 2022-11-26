@@ -14,6 +14,7 @@ class Player;
 class Stats;
 
 class Team {
+private:
     int id;
     int points;
     AVLTree<int, shared_ptr<Player>> players;
@@ -21,8 +22,7 @@ class Team {
     int total_goals;
     int total_cards;
     int games_played;
-    int top_scorer_id; // TODO: Player top_scorer, remove top_scorer_name also
-    char *top_scorer_name;
+    shared_ptr<Player> top_scorer;
     bool has_goalkeeper = false;
 
     //static int calc_strength(shared_ptr<Node<int, shared_ptr<Player>>& root);
@@ -48,6 +48,8 @@ public:
     int get_strength();
 
     int get_points();
+
+    shared_ptr<Player>& get_top_scorer();
 
     bool goalkeeper();
 

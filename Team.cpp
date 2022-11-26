@@ -42,6 +42,10 @@ int Team::get_points() {
     return points;
 }
 
+shared_ptr<Player>& Team::get_top_scorer() {
+    return top_scorer;
+}
+
 bool Team::goalkeeper(){
     return has_goalkeeper;
 }

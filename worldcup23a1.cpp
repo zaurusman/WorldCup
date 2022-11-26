@@ -71,12 +71,12 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     his_team->add_total_goals(added_goals);
     his_team->add_total_cards(added_cards);
 
-    //TODO: add next and prev check for closest players.
+    //TODO: add next and prev check for closest players, and top_scorer
 
     return StatusType::SUCCESS;
 }
 
-StatusType world_cup_t::remove_player(int playerId) {
+StatusType world_cup_t::remove_player(int playerId) {//TODO: add check for top_scorer
     if (playerId <= 0) {
         return StatusType::INVALID_INPUT;
     }
@@ -124,7 +124,7 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         to_update->add_cards(cardsReceived);
         to_update->get_team()->add_total_goals(scoredGoals);
         to_update->get_team()->add_total_cards(cardsReceived);
-        //TODO:update both trees in team and world_cup_t
+        //TODO:update both trees in team and world_cup_t , check top_scorer
     } catch(KeyDoesNotExist& e) {
         return StatusType::FAILURE;
     } catch (std::bad_alloc &e) {
@@ -207,7 +207,13 @@ output_t<int> world_cup_t::get_top_scorer(int teamId) {
     else if(teamId>0&&(!teams.does_exist(teamId)||teams.find(teamId)->info->get_players_count()==0)||teamId<0&&all_players.get_nodes_count()==0) {
         return output_t<int>(StatusType::FAILURE);
     }
+    else if(teamId<0) {
+        return output_t<int>(top_scorer->get_id());
 
+    }
+    else {
+        return output_t<int>(teams.find(teamId)->info->get_top_scorer()->get_id());
+    }
     return 2008;
 }
 
