@@ -54,6 +54,9 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     shared_ptr<Team> his_team = teams.find(teamId)->info;
     shared_ptr<Player> to_add = make_shared<Player>(playerId, his_team, gamesPlayed, goals, cards, goalKeeper);
     Stats stats_to_add(*to_add);
+    int added_goals = to_add->get_goals();
+    int added_cards = to_add->get_cards();
+
     his_team->get_players().insert(playerId, to_add);
     his_team->get_players_score().insert(stats_to_add, to_add);
 
@@ -61,9 +64,12 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     all_players_score.insert(stats_to_add, to_add);
 
     if (his_team->get_number_of_players() >= VALID_SIZE && his_team->goalkeeper() &&
-        !valid_teams.find(teamId)) {
+        !valid_teams.does_exist(teamId)) {
         valid_teams.insert(teamId, his_team);
     }
+
+    his_team->add_total_goals(added_goals);
+    his_team->add_total_cards(added_cards);
 
     //TODO: add next and prev check for closest players.
 
@@ -77,13 +83,25 @@ StatusType world_cup_t::remove_player(int playerId) {
     if (!all_players.does_exist(playerId)) {
         return StatusType::FAILURE;
     }
+    // TODO: Q: can we remove try and catch (failure caught on above if, bad_alloc only happens in new)
     try {
-        shared_ptr<Team> his_team = all_players.find(playerId)->info->get_team();
-        his_team->get_players().remove(playerId);
-        all_players.remove(playerId);
-        his_team->update_strength();
-        //TODO: update the other trees as necessary.
+        shared_ptr<Player> player_to_remove = all_players.find(playerId)->info;
+        shared_ptr<Team> his_team = player_to_remove->get_team();
+        Stats stats_to_remove(*player_to_remove);
+        int removed_goals = player_to_remove->get_goals();
+        int removed_cards = player_to_remove->get_cards();
 
+        all_players.remove(playerId);
+        all_players_score.remove(stats_to_remove);
+        his_team->get_players().remove(playerId);
+        his_team->get_players_score().remove(stats_to_remove);
+        if ((his_team->get_number_of_players() < VALID_SIZE || !his_team->goalkeeper()) &&
+            valid_teams.does_exist(his_team->get_id())) {
+            valid_teams.remove(his_team->get_id());
+        }
+
+        his_team->add_total_goals(-1 * removed_goals);
+        his_team->add_total_cards(-1 * removed_cards);
     }
     catch (const KeyDoesNotExist &e) {
         return StatusType::FAILURE;
@@ -100,12 +118,13 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         return StatusType::INVALID_INPUT;
     }
     try {
-        Player &to_update = *all_players.find(playerId)->info;
-        to_update.set_games_played(gamesPlayed);
-        to_update.set_goals(scoredGoals);
-        to_update.set_cards(cardsReceived);
-        to_update.get_team()->update_strength();
-    }catch(KeyDoesNotExist& e) {
+        shared_ptr<Player> to_update = all_players.find(playerId)->info;
+        to_update->add_games_played(gamesPlayed);
+        to_update->add_goals(scoredGoals);
+        to_update->add_cards(cardsReceived);
+        to_update->get_team()->add_total_goals(scoredGoals);
+        to_update->get_team()->add_total_cards(cardsReceived);
+    } catch(KeyDoesNotExist& e) {
         return StatusType::FAILURE;
     } catch (std::bad_alloc &e) {
         return StatusType::ALLOCATION_ERROR;
@@ -115,14 +134,14 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
 
 StatusType world_cup_t::play_match(int teamId1, int teamId2)
 {
-    if(!valid_teams.find(teamId1)||!valid_teams.find(teamId2)) {
+    if(!valid_teams.does_exist(teamId1)||!valid_teams.does_exist(teamId2)) {
         return StatusType::FAILURE;
     }
     shared_ptr<Team> team1 = valid_teams.find(teamId1)->info;
     shared_ptr<Team> team2 = valid_teams.find(teamId2)->info;
-    if(team1->get_strength()>team2->get_strength()){
+    if(team1->get_strength() > team2->get_strength()){
         team1->set_points(WINNER_POINTS);
-    }else if(team1->get_strength()<team2->get_strength()){
+    }else if(team1->get_strength() < team2->get_strength()){
         team2->set_points(WINNER_POINTS);
     }else {//Draw
         team1->set_points(DRAW_POINTS);

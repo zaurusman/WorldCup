@@ -14,18 +14,16 @@ class Player;
 class Stats;
 
 class Team {
-    int team_id;
+    int id;
     int points;
     AVLTree<int, shared_ptr<Player>> players;
     AVLTree<Stats, shared_ptr<Player>> players_score;
-    int number_of_players;
     int total_goals;
     int total_cards;
     int games_played;
     int top_scorer_id; // TODO: Player top_scorer, remove top_scorer_name also
     char *top_scorer_name;
     bool has_goalkeeper = false;
-    int strength = 0;
 
     //static int calc_strength(shared_ptr<Node<int, shared_ptr<Player>>& root);
 
@@ -36,6 +34,8 @@ public:
     Team(int team_id, int points);
 
     bool is_empty();
+
+    int get_id();
 
     int get_team_power();
 
@@ -49,11 +49,15 @@ public:
 
     bool goalkeeper();
 
+    void add_total_goals(int goals);
+
+    void add_total_cards(int cards);
+
     AVLTree<int, shared_ptr<Player>>& get_players();
 
     AVLTree<Stats, shared_ptr<Player>>& get_players_score();
 
-    void update_strength();
+//    void update_strength();
 
     void set_points(int points);
 };

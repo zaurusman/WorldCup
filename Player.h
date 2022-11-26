@@ -27,11 +27,11 @@ public:
 
     int get_games_played();
 
-    void set_games_played(int games_played);
+    void add_games_played(int games_played);
 
-    void set_goals(int goals);
+    void add_goals(int goals);
 
-    void set_cards(int cards);
+    void add_cards(int cards);
 
     int get_id();
 

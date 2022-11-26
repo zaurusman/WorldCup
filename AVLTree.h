@@ -245,7 +245,7 @@ public:
         return find_rec(root,key);
     }
 
-    bool does_exist(Key& key) {
+    bool does_exist(Key key) {
         try {
             find(key);
         } catch (KeyDoesNotExist &e) {

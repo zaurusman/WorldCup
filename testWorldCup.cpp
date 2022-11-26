@@ -50,7 +50,7 @@ bool test_add_team_existing() {
 }
 
 
-bool test_add_team() {
+void test_add_team() {
     RUN_TEST(test_add_team_valid);
     RUN_TEST(test_add_team_invalid_points);
     RUN_TEST(test_add_team_invalid_id);
@@ -87,7 +87,7 @@ bool test_remove_team_invalid_id() {
     return s1==StatusType::INVALID_INPUT && s2==StatusType::INVALID_INPUT && my_wc.teams.get_nodes_count()==0 && my_wc.teams.get_tree_height()==-1;
 }
 
-bool test_remove_team() {
+void test_remove_team() {
     RUN_TEST(test_remove_team_valid);
     RUN_TEST(test_remove_non_existing);
     RUN_TEST(test_remove_not_empty);
@@ -139,7 +139,8 @@ bool test_add_player_no_team() {
     return s1==StatusType::FAILURE;
 }
 
-bool test_add_player() {
+void test_add_player() {
+    // TODO: add tests related to team fields affected by add / remove
     RUN_TEST(test_add_player_valid);
     RUN_TEST(test_add_player_invalid_inputs);
     RUN_TEST(test_add_player_exists);
@@ -173,21 +174,26 @@ bool test_remove_player_no_player() {
            && my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==0;
 }
 
-bool test_remove_player() {
+void test_remove_player() {
     RUN_TEST(test_remove_player_valid);
     RUN_TEST(test_remove_player_invalid_id);
     RUN_TEST(test_remove_player_no_player);
 }
 
-bool test_world_cup() {
+void test_update_player_stats() {
+    //
+}
+
+
+void test_world_cup() {
     RUN_TEST_GROUP(test_add_team);
     RUN_TEST_GROUP(test_remove_team);
     RUN_TEST_GROUP(test_add_player);
     RUN_TEST_GROUP(test_remove_player);
-//    RUN_TEST_GROUP(test_update_player_stats);
+    RUN_TEST_GROUP(test_update_player_stats);
 }
 
 int main() {
     RUN_TEST_GROUP(test_world_cup);
-//    return 0;
+    return 0;
 }

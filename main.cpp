@@ -59,7 +59,7 @@ int main2() {
 //    my_avl_tree.insert(Stats(*player4),player4);
 //    my_avl_tree.insert(Stats(*player5),player5);
 //    my_avl_tree.inorder();
-//    my_avl_tree.find(s1)->info->set_goals(12);
+//    my_avl_tree.find(s1)->info->add_goals(12);
 //    my_avl_tree.inorder();
 
 //    my_avl_tree.remove(s1);
