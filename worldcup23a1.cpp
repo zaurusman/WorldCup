@@ -15,7 +15,6 @@ StatusType world_cup_t::add_team(int team_id, int points) {
     try {
         shared_ptr<Team> new_team(new Team(team_id, points));
         teams.insert(team_id, new_team);
-        // should not add to valid teams when team has no players
     } catch (const KeyAlreadyExists &e) {
         return StatusType::FAILURE;
     } catch (const std::bad_alloc &e) {
@@ -135,6 +134,7 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         to_update->add_cards(cardsReceived);
         to_update->get_team()->add_total_goals(scoredGoals);
         to_update->get_team()->add_total_cards(cardsReceived);
+        if(Stats(to_update)>Stats())
         //TODO:update both trees in team and world_cup_t , check top_scorer
     } catch (KeyDoesNotExist &e) {
         return StatusType::FAILURE;
@@ -239,7 +239,21 @@ output_t<int> world_cup_t::get_all_players_count(int teamId) {
 }
 
 StatusType world_cup_t::get_all_players(int teamId, int *const output) {
-    // TODO: Your code goes here
+    if(teamId == 0||output == NULL) {
+        return StatusType::INVALID_INPUT;
+    }
+    if(teamId>0) {
+        if(!teams.does_exist(teamId)) {
+            return StatusType::FAILURE;
+        }
+        auto list;
+        AVLTree<Stats, shared_ptr<Player>>::AVL_to_list_inorder(teams.find(teamId)->info->get_players_score().get_root(),);
+
+
+    }
+
+
+
     output[0] = 4001;
     output[1] = 4002;
     return StatusType::SUCCESS;

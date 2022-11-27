@@ -43,8 +43,6 @@ template<class Key, class Info>
 class AVLTree {
 public:
     AVLTree() : root(nullptr), nodes_count(0){}
-    //TODO: Remove
-    // explicit AVLTree(shared_ptr<Node<Key,Info>>& root): root(root), nodes_count(0){}
 
     shared_ptr<Node<Key,Info>>& get_root() {
         return root;
