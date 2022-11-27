@@ -283,7 +283,57 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId) {
 }
 
 output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
-    // TODO: Your code goes here
-    return 2;
+    // TODO: split code to functions
+    LinkedList<Node<int, shared_ptr<Team>>> valid_nodes;
+    LinkedList<Node<int, int>> tourney;
+    AVLTree<int, shared_ptr<Team>>::AVL_to_list_inorder(valid_teams.get_root(), valid_nodes);
+    ListNode<Node<int, shared_ptr<Team>>>* curr_team = valid_nodes.get_first();
+    ListNode<Node<int, int>>* team1 = nullptr;
+    ListNode<Node<int, int>>* team2 = nullptr;
+    bool is_first = true;
+    bool first_wins;
+
+    while (curr_team && curr_team->data.info->get_id() < minTeamId) {
+        curr_team = curr_team->next;
+    }
+    if (!curr_team) { // minTeamId is larger than last id
+        return StatusType::FAILURE;
+    }
+
+    while (curr_team && curr_team->data.info->get_id() <= maxTeamId) {
+        int strength = curr_team->data.info->get_strength();
+        int id = curr_team->data.info->get_id();
+        tourney.push_back(Node<int, int>(id, strength));
+        curr_team = curr_team->next;
+    }
+
+    while (tourney.get_first()->next) {
+        team1 = tourney.get_first();
+        while (team1 && team1->next) {
+            team2 = team1->next;
+            int first_strength = team1->data.info;
+            int second_strength = team2->data.info;
+            if (first_strength > second_strength) {
+                first_wins = true;
+            } else if (first_strength < second_strength) {
+                first_wins = false;
+            } else if (team1->data.key > team2->data.key) {
+                first_wins = true;
+            } else {
+                first_wins = false;
+            }
+
+            if (first_wins) {
+                team1->data.info = first_strength + second_strength + 3;
+                tourney.remove_node(team2);
+                team1 = team1->next;
+            } else {
+                team2->data.info = first_strength + second_strength + 3;
+                tourney.remove_node(team1);
+                team1 = team2->next;
+            }
+        }
+    }
+    return tourney.get_first()->data.key;
 }
 

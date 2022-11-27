@@ -31,6 +31,7 @@ template<class T>
 class LinkedList {
 private:
     ListNode<T> *first = nullptr;
+    ListNode<T> *last = nullptr;
     int number_of_nodes = 0;
 
 public:
@@ -59,8 +60,22 @@ public:
         if(first) {
             to_insert->next = first;
             first->prev = to_insert;
+        } else {
+            last = to_insert;
         }
         first = to_insert;
+    }
+
+    void push_back(const T& data) {
+        ListNode<T> *to_insert = new ListNode<T>();
+        to_insert->data = data;
+        if(last) {
+            to_insert->prev = last;
+            last->next = to_insert;
+        } else {
+            first = to_insert;
+        }
+        last = to_insert;
     }
 
     ListNode<T> *insert_between(ListNode<T> *before, const T& node, ListNode<T> *after) {
@@ -72,6 +87,7 @@ public:
             before->next = to_insert;
             to_insert->prev = before;
             to_insert->next = nullptr;
+            last = to_insert;
         } else if (!before && after) {
             // insert to start of list
             to_insert->next = after;
@@ -83,6 +99,7 @@ public:
             to_insert->next = nullptr;
             to_insert->prev = nullptr;
             first = to_insert;
+            last = to_insert;
         } else {
             // insert to middle of list
             before->next = to_insert;
@@ -117,12 +134,15 @@ public:
         if (!before && after) {
             // removing first node
             first = after;
+            first->prev = nullptr;
         } else if (before && !after) {
             // removing last node
-            before->next = nullptr;
+            last = before;
+            last->next = nullptr;
         } else if (!before && !after) {
             // removing only node
             first = nullptr;
+            last = nullptr;
         } else {
             // removing middle node
             before->next = after;

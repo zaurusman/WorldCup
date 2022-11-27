@@ -92,3 +92,7 @@ void Team::add_points(int points) {
     this->points+=points;
 }
 
+void Team::set_knockout_score(int score) {
+    knockout_score = score;
+}
+
