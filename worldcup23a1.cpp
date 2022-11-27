@@ -134,7 +134,7 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         to_update->add_cards(cardsReceived);
         to_update->get_team()->add_total_goals(scoredGoals);
         to_update->get_team()->add_total_cards(cardsReceived);
-        if(Stats(to_update)>Stats())
+
         //TODO:update both trees in team and world_cup_t , check top_scorer
     } catch (KeyDoesNotExist &e) {
         return StatusType::FAILURE;
@@ -242,20 +242,38 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output) {
     if(teamId == 0||output == NULL) {
         return StatusType::INVALID_INPUT;
     }
+    int *arr = output;
     if(teamId>0) {
-        if(!teams.does_exist(teamId)) {
+        try {
+            if (teams.find(teamId)->info->is_empty()) {
+                return StatusType::FAILURE;
+            }
+            LinkedList<Node<Stats, shared_ptr<Player>>> list;
+            AVLTree<Stats, shared_ptr<Player>>::AVL_to_list_inorder(teams.find(teamId)->info->get_players_score().get_root(), list);
+            ListNode<Node<Stats, shared_ptr<Player>>> *node = list.get_first();
+            while (node) {
+                *arr = node->data.info->get_id();
+                node = node->next;
+                arr++;
+            }
+
+            return StatusType::SUCCESS;
+        }catch(KeyDoesNotExist &e) {
             return StatusType::FAILURE;
         }
-        auto list;
-        AVLTree<Stats, shared_ptr<Player>>::AVL_to_list_inorder(teams.find(teamId)->info->get_players_score().get_root(),);
-
-
+    }
+    //teamId<0
+    LinkedList<Node<Stats, shared_ptr<Player>>> list;
+    AVLTree<Stats, shared_ptr<Player>>::AVL_to_list_inorder(all_players_score.get_root(), list);
+    ListNode<Node<Stats, shared_ptr<Player>>> *node = list.get_first();
+    while (node) {
+        *arr = node->data.info->get_id();
+        node = node->next;
+        arr++;
     }
 
-
-
-    output[0] = 4001;
-    output[1] = 4002;
+    //output[0] = 4001;
+    //output[1] = 4002;
     return StatusType::SUCCESS;
 }
 

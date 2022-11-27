@@ -17,6 +17,8 @@ public:
     ListNode *prev = nullptr;
     T data;
 
+    ListNode<T>() = default;
+
 
 //    ListNode<T>(ListNode<T>& other) {
 //        next = nullptr;

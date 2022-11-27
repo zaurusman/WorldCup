@@ -22,7 +22,7 @@ class Node {
         Node(const Key &key, const Info &info):
             key(key), info(info), left(nullptr), right(nullptr), height(0) {}
 
-        Node() = default;
+        Node<Key,Info>() = default;
 };
 
 class KeyAlreadyExists : public std::exception {
