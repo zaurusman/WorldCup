@@ -11,10 +11,18 @@ using namespace std;
 
 
 template<class T>
-struct ListNode {
+class ListNode {
+public:
     ListNode *next = nullptr;
     ListNode *prev = nullptr;
     T data;
+
+
+//    ListNode<T>(ListNode<T>& other) {
+//        next = nullptr;
+//        prev = nullptr;
+//        data = other.data;
+//    }
 };
 
 template<class T>
@@ -39,7 +47,21 @@ public:
         delete first;
     }
 
-    ListNode<T> *insert_between(ListNode<T> *before, T node, ListNode<T> *after) {
+    ListNode<T>* get_first() {
+        return first;
+    }
+
+    void push_front(const T& data) {
+        ListNode<T> *to_insert = new ListNode<T>();
+        to_insert->data = data;
+        if(first) {
+            to_insert->next = first;
+            first->prev = to_insert;
+        }
+        first = to_insert;
+    }
+
+    ListNode<T> *insert_between(ListNode<T> *before, const T& node, ListNode<T> *after) {
         ListNode<T> *to_insert = new ListNode<T>();
         to_insert->data = node;
 
@@ -122,6 +144,40 @@ public:
         }
         // TODO: should user allocate memory or is this fine? yes
     }
+
+    static void merge_sorted(LinkedList<T> &list1, LinkedList<T> &list2, LinkedList<T>& new_list) {
+
+        // (1) Create a new head pointer to an empty linked list.
+        // (2) Check the first value of both linked lists.
+        // (3) Whichever node from L1 or L2 is smaller, append it to the new list and move the pointer to the next node.
+        // (4) Continue this process until you reach the end of a linked list.
+
+//        LinkedList<T> new_list = LinkedList<T>();
+        ListNode<T> *node1 = list1.get_first();
+        ListNode<T> *node2 = list2.get_first();
+        ListNode<T> *new_node;
+        new_list.first = new_node;
+        ListNode<T> *before = nullptr;
+        while(node1&&node2) {
+            if(node1->data>node2->data) {
+                before = new_list.insert_between(before, node2->data, nullptr);
+                node2 = node2->next;
+            }
+            else if(node1->data<=node2->data) {
+                before = new_list.insert_between(before, node1->data, nullptr);
+                node1 = node1->next;
+            }
+        }
+        while(node1) {
+            before = new_list.insert_between(before, node1->data, nullptr);
+            node1 = node1->next;
+        }
+        while(node2) {
+            before = new_list.insert_between(before, node2->data, nullptr);
+            node1 = node2->next;
+        }
+    }
 };
+
 
 #endif //WORLDCUP_LINKEDLIST_H
