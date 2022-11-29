@@ -78,6 +78,58 @@ public:
         last = to_insert;
     }
 
+    ListNode<T> *insert_after(ListNode<T> *before, const T& node) {
+        ListNode<T> *to_insert = new ListNode<T>();
+        to_insert->data = node;
+
+        if (!before) {
+            // insert to start of list
+            to_insert->next = first;
+            first->prev = to_insert;
+            first = to_insert;
+
+        } else {
+            if (before->next) {
+                // insert to middle
+                before->next->prev = to_insert;
+                to_insert->next = before->next;
+                before->next = to_insert;
+                to_insert->prev = before;
+            } else {
+                // insert to end
+                to_insert->prev = last;
+                last->next = to_insert;
+                last = to_insert;
+            }
+        }
+    }
+
+    ListNode<T> *insert_before(ListNode<T> *after, const T& node) {
+        ListNode<T> *to_insert = new ListNode<T>();
+        to_insert->data = node;
+
+        if (!after) {
+            // insert to end of list
+            to_insert->prev = last;
+            last->next = to_insert;
+            last = to_insert;
+
+        } else {
+            if (after->prev) {
+                // insert to middle
+                after->prev->next = to_insert;
+                to_insert->prev = after->prev;
+                after->prev = to_insert;
+                to_insert->next = after;
+            } else {
+                // insert to end
+                to_insert->next = first;
+                first->prev = to_insert;
+                first = to_insert;
+            }
+        }
+    }
+
     ListNode<T> *insert_between(ListNode<T> *before, const T& node, ListNode<T> *after) {
         ListNode<T> *to_insert = new ListNode<T>();
         to_insert->data = node;

@@ -18,6 +18,7 @@ class Player {
     int cards;
     bool goalkeeper;
     int games_not_played = 0;
+    ListNode<Node<Stats,shared_ptr<Player>>>* player_node;
     Player *next_closest;
     Player *prev_closest;
     friend class Stats;
@@ -38,6 +39,8 @@ public:
     int get_goals();
 
     int get_cards();
+
+    ListNode<Node<Stats,shared_ptr<Player>>>* get_player_node();
 
     bool is_goalkeeper();
 

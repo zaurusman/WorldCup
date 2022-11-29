@@ -344,18 +344,18 @@ bool test_knockout_winner_valid() {
     my_wc.add_player(10, 111, 0, 0, 0, false);
     my_wc.add_player(11, 111, 0, 0, 0, true);
 
-    my_wc.add_team(11, 2);
-    my_wc.add_player(80, 11, 0, 0, 0, false);
-    my_wc.add_player(12, 11, 0, 0, 0, false);
-    my_wc.add_player(13, 11, 0, 0, 0, false);
-    my_wc.add_player(14, 11, 0, 0, 0, false);
-    my_wc.add_player(15, 11, 0, 0, 0, false);
-    my_wc.add_player(16, 11, 0, 0, 0, false);
-    my_wc.add_player(17, 11, 0, 0, 0, false);
-    my_wc.add_player(18, 11, 0, 0, 0, false);
-    my_wc.add_player(19, 11, 0, 0, 0, false);
-    my_wc.add_player(110, 11, 0, 0, 0, false);
-    my_wc.add_player(111, 11, 0, 0, 0, true);
+    my_wc.add_team(17, 80);
+    my_wc.add_player(80, 17, 0, 0, 0, false);
+    my_wc.add_player(12, 17, 0, 0, 0, false);
+    my_wc.add_player(13, 17, 0, 0, 0, false);
+    my_wc.add_player(14, 17, 0, 0, 0, false);
+    my_wc.add_player(15, 17, 0, 0, 0, false);
+    my_wc.add_player(16, 17, 0, 0, 0, false);
+    my_wc.add_player(17, 17, 0, 0, 0, false);
+    my_wc.add_player(18, 17, 0, 0, 0, false);
+    my_wc.add_player(19, 17, 0, 0, 0, false);
+    my_wc.add_player(110, 17, 0, 0, 0, false);
+    my_wc.add_player(111, 17, 0, 0, 0, true);
 
     my_wc.add_team(13, 80);
     my_wc.add_player(91, 13, 0, 0, 0, false);
@@ -383,7 +383,7 @@ bool test_knockout_winner_valid() {
     my_wc.add_player(700, 1000, 0, 0, 0, false);
     my_wc.add_player(701, 1000, 0, 0, 0, true);
 
-    cout << my_wc.knockout_winner(10, 1000).ans() << endl;
+    return my_wc.knockout_winner(10, 1000).ans() == 17;
 }
 
 void test_knockout_winner() {
@@ -401,7 +401,7 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_knockout_winner);
 }
 
-int main2() {
+int main() {
     RUN_TEST_GROUP(test_world_cup);
     return 0;
 }

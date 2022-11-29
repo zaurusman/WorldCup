@@ -64,10 +64,6 @@ public:
         std::cout << std::endl;
     }
 
-    shared_ptr<Node<Key,Info>> find(Key& key){
-        return find_rec(root,key);
-    }
-
     bool does_exist(Key key) {
         try {
             find(key);
@@ -83,6 +79,14 @@ public:
 
     int get_nodes_count() {
         return nodes_count;
+    }
+
+    shared_ptr<Node<Key,Info>> find(Key& key){
+        return find_rec(root,key);
+    }
+
+    shared_ptr<Node<Key,Info>> find_parent(Key& key){
+        return find_parent_rec(root,key, nullptr);
     }
 
     static void AVL_to_list_inorder(shared_ptr<Node<Key,Info>>& root,LinkedList<Node<Key,Info>>& out) {
@@ -260,6 +264,22 @@ private:
             return root;
         }
     }
+
+    static shared_ptr<Node<Key,Info>> find_parent_rec(shared_ptr<Node<Key,Info>>& root,Key& key, shared_ptr<Node<Key, Info>> parent){
+        if(!root){
+            throw KeyDoesNotExist();
+        }
+        else if(key < root->key){
+            return find_parent_rec(root->left,key, root);
+        }
+        else if(root->key < key){
+            return find_parent_rec(root->right,key, root);
+        } else {
+            return parent;
+        }
+    }
+
+
     static void print_inorder(shared_ptr<Node<Key,Info>>& root) {
         if(!root) {
             return;

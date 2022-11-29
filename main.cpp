@@ -7,7 +7,7 @@
 #include "AVLTree.h"
 #include "LinkedList.h"
 
-int main2() {
+int main4() {
     LinkedList<int> my_list1;
     LinkedList<int> my_list2;
 //    ListNode<int> one = my_list1.insert_between(nullptr,1,nullptr);
@@ -59,5 +59,5 @@ int main2() {
 //        cout << arr[i] << ",,";
 //    }
 //
-
+    return 0;
 }

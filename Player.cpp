@@ -44,6 +44,10 @@ int Player::get_cards() {
     return cards;
 }
 
+ListNode<Node<Stats,shared_ptr<Player>>>* Player::get_player_node(){
+    return player_node;
+}
+
 bool Player::is_goalkeeper() {
     return goalkeeper;
 }

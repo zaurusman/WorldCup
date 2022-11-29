@@ -19,6 +19,7 @@
 #include "AVLTree.h"
 #include "Team.h"
 #include "Player.h"
+#include "LinkedList.h"
 #include <memory>
 #include <exception>
 
@@ -31,6 +32,7 @@ public: //private:
     AVLTree<int, shared_ptr<Player>> all_players;
     AVLTree<Stats, shared_ptr<Player>> all_players_score;
     shared_ptr<Player> top_scorer;
+    LinkedList<Node<Stats,shared_ptr<Player>>> players_list;
     int numOfPlayers = 0;
     int numOfTeams = 0;
     static const int VALID_SIZE = 11;

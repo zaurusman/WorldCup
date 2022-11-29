@@ -76,8 +76,20 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     his_team->add_total_goals(added_goals);
     his_team->add_total_cards(added_cards);
 
-
     //TODO: add next and prev check for closest players, and top_scorer
+    shared_ptr<Node<Stats,shared_ptr<Player>>> all_players_father = all_players_score.find_parent(stats_to_add);
+    if (all_players_father->key > stats_to_add) {
+        players_list.insert_before(all_players_father->info->get_player_node(),*all_players_father->left);
+    } else {
+        players_list.insert_after(all_players_father->info->get_player_node(),*all_players_father->left);
+    }
+
+    shared_ptr<Node<Stats,shared_ptr<Player>>> team_father = teams.find(teamId)->info->get_players_score().find_parent(stats_to_add);
+    if (all_players_father->key > stats_to_add) {
+        players_list.insert_before(team_father->info->get_player_node(),*all_players_father->left);
+    } else {
+        players_list.insert_after(team_father->info->get_player_node(),*all_players_father->left);
+    }
 
     return StatusType::SUCCESS;
 }
@@ -282,16 +294,22 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId) {
     return 1006;
 }
 
+
+static bool does_first_team_win(int first_strength, int second_strength) {
+    if (first_strength > second_strength) {
+        return true;
+    } else { // if strengths are equal, second team has bigger id
+        return false;
+    }
+}
+
 output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
-    // TODO: split code to functions
     LinkedList<Node<int, shared_ptr<Team>>> valid_nodes;
     LinkedList<Node<int, int>> tourney;
     AVLTree<int, shared_ptr<Team>>::AVL_to_list_inorder(valid_teams.get_root(), valid_nodes);
     ListNode<Node<int, shared_ptr<Team>>>* curr_team = valid_nodes.get_first();
-    ListNode<Node<int, int>>* team1 = nullptr;
-    ListNode<Node<int, int>>* team2 = nullptr;
-    bool is_first = true;
-    bool first_wins;
+    ListNode<Node<int, int>>* team1;
+    ListNode<Node<int, int>>* team2;
 
     while (curr_team && curr_team->data.info->get_id() < minTeamId) {
         curr_team = curr_team->next;
@@ -313,17 +331,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
             team2 = team1->next;
             int first_strength = team1->data.info;
             int second_strength = team2->data.info;
-            if (first_strength > second_strength) {
-                first_wins = true;
-            } else if (first_strength < second_strength) {
-                first_wins = false;
-            } else if (team1->data.key > team2->data.key) {
-                first_wins = true;
-            } else {
-                first_wins = false;
-            }
-
-            if (first_wins) {
+            if (does_first_team_win(first_strength, second_strength)) {
                 team1->data.info = first_strength + second_strength + 3;
                 tourney.remove_node(team2);
                 team1 = team1->next;
