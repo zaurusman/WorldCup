@@ -7,7 +7,7 @@
 #include <memory>
 #include <iostream>
 #include "LinkedList.h"
-
+#include "Exception.h"
 using namespace std;
 
 template<class Key , class Info>
@@ -25,19 +25,7 @@ class Node {
         Node<Key,Info>() = default;
 };
 
-class KeyAlreadyExists : public std::exception {
-public:
-    const char * what () const noexcept override {
-        return "Key already exists";
-    }
-};
 
-class KeyDoesNotExist : public std::exception {
-public:
-    const char * what () const noexcept override {
-        return "Key does not exist";
-    }
-};
 
 template<class Key, class Info>
 class AVLTree {

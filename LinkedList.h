@@ -6,6 +6,7 @@
 #define WORLDCUP_LINKEDLIST_H
 
 #include <iostream>
+#include "Exception.h"
 
 using namespace std;
 
