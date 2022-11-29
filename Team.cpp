@@ -7,7 +7,11 @@
 Team::Team(int team_id, int points):
         id(team_id),
         points(points),
-        players()//TODO: goalkeeper = false. strength = 0;
+        players(),
+        total_goals(0),
+        total_cards(0),
+        games_played(0),
+        goalkeepers(0)
 {}
 
 bool Team::is_empty() {
@@ -91,8 +95,3 @@ AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
 void Team::add_points(int points) {
     this->points+=points;
 }
-
-void Team::set_knockout_score(int score) {
-    knockout_score = score;
-}
-

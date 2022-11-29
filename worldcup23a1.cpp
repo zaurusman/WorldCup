@@ -60,10 +60,12 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     to_add->set_games_not_played(games_not_played);
 
     his_team->get_players().insert(playerId, to_add);
-    his_team->get_players_score().insert(stats_to_add, to_add);
+    shared_ptr<Node<Stats,shared_ptr<Player>>> team_parent;
+    his_team->get_players_score().insert_p(stats_to_add, to_add,team_parent);
 
     all_players.insert(playerId, to_add);
-    all_players_score.insert(stats_to_add, to_add);
+    shared_ptr<Node<Stats,shared_ptr<Player>>> all_players_parent;
+    all_players_score.insert_p(stats_to_add, to_add,all_players_parent);
 
     if (goalKeeper) {
         his_team->add_goalkeeper(1);
@@ -76,19 +78,14 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     his_team->add_total_goals(added_goals);
     his_team->add_total_cards(added_cards);
 
-    //TODO: add next and prev check for closest players, and top_scorer
-    shared_ptr<Node<Stats,shared_ptr<Player>>> all_players_father = all_players_score.find_parent(stats_to_add);
-    if (all_players_father->key > stats_to_add) {
-        players_list.insert_before(all_players_father->info->get_player_node(),*all_players_father->left);
+    if (all_players_parent) {
+        if (all_players_parent->key > stats_to_add) {
+            to_add->set_player_node(players_list.insert_before(all_players_parent->info->get_player_node(),  *all_players_score.find(stats_to_add)));
+        } else {
+            to_add->set_player_node(players_list.insert_after(all_players_parent->info->get_player_node(),  *all_players_score.find(stats_to_add)));
+        }
     } else {
-        players_list.insert_after(all_players_father->info->get_player_node(),*all_players_father->left);
-    }
-
-    shared_ptr<Node<Stats,shared_ptr<Player>>> team_father = teams.find(teamId)->info->get_players_score().find_parent(stats_to_add);
-    if (all_players_father->key > stats_to_add) {
-        players_list.insert_before(team_father->info->get_player_node(),*all_players_father->left);
-    } else {
-        players_list.insert_after(team_father->info->get_player_node(),*all_players_father->left);
+        to_add->set_player_node(players_list.insert_before(nullptr, *all_players_score.find(stats_to_add)));
     }
 
     return StatusType::SUCCESS;

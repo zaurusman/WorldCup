@@ -12,6 +12,7 @@ Player::Player(int id, shared_ptr<Team>& team, int games_played, int goals, int 
     cards(cards),
     goalkeeper(goalkeeper),
     games_not_played(0),
+    player_node(nullptr),
     next_closest(nullptr),
     prev_closest(nullptr)
 {}
@@ -52,8 +53,12 @@ bool Player::is_goalkeeper() {
     return goalkeeper;
 }
 
-void Player::set_games_not_played(int games_not_played) {
-    this->games_not_played = games_not_played;
+void Player::set_games_not_played(int games) {
+    games_not_played = games;
+}
+
+void Player::set_player_node(ListNode<Node<Stats,shared_ptr<Player>>>* node) {
+    player_node = node;
 }
 
 shared_ptr<Team>& Player::get_team() {

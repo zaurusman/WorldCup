@@ -49,8 +49,15 @@ public:
     }
 
     ~AVLTree() = default;
+
     void insert(const Key &key,const Info &info){
         insert_rec(root, key,info);
+        nodes_count++;
+    }
+
+    void insert_p(const Key &key,const Info &info,shared_ptr<Node<Key,Info>>& parent){
+        bool is_parent = false;
+        insert_rec_p(root, key,info, &is_parent,parent);
         nodes_count++;
     }
 
@@ -124,6 +131,34 @@ private:
         }
         else if(root->key < key){
             insert_rec(root->right,key,info);
+        }
+        else { // root->key == key
+            throw KeyAlreadyExists();
+        }
+
+        balance(root);
+        root->height = 1 + max(get_height(root->left), get_height(root->right));
+    };
+
+    void insert_rec_p(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info, bool* is_parent,shared_ptr<Node<Key,Info>>& parent){
+        if(!root){
+            root = make_shared<Node<Key,Info>>(Node<Key,Info>(key,info));
+            *is_parent = true;
+            parent = nullptr;
+        }
+        else if(key < root->key){
+            insert_rec_p(root->left,key,info, is_parent, parent);
+            if (*is_parent) {
+                *is_parent = false;
+                parent = root;
+            }
+        }
+        else if(root->key < key){
+            insert_rec_p(root->right,key,info, is_parent, parent);
+            if (*is_parent) {
+                *is_parent = false;
+                parent = root;
+            }
         }
         else { // root->key == key
             throw KeyAlreadyExists();

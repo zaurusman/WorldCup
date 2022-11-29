@@ -46,6 +46,8 @@ public:
 
     void set_games_not_played(int games_not_played);
 
+    void set_player_node(ListNode<Node<Stats,shared_ptr<Player>>>*);
+
     shared_ptr<Team>& get_team();
 };
 
@@ -90,13 +92,13 @@ public:
     }
 
     bool operator>(const Stats &other) const {
-        if (goals < other.goals) {
+        if (*goals > *other.goals) {
             return true;
-        } else if (goals == other.goals) {
-            if (cards > other.cards) {
+        } else if (*goals == *other.goals) {
+            if (*cards < *other.cards) {
                 return true;
-            } else if (cards == other.cards) {
-                if (player_id < other.player_id) {
+            } else if (*cards == *other.cards) {
+                if (*player_id > *other.player_id) {
                     return true;
                 } else {
                     return false;

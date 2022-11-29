@@ -24,7 +24,6 @@ private:
     int games_played = 0;
     shared_ptr<Player> top_scorer;
     int goalkeepers = 0;
-    int knockout_score = 0;
 
 public:
     Team() = default;
@@ -64,11 +63,8 @@ public:
 
     AVLTree<Stats, shared_ptr<Player>>& get_players_score();
 
-//    void update_strength();
-
     void add_points(int points);
 
-    void set_knockout_score(int score);
 };
 
 
