@@ -220,7 +220,7 @@ public:
         delete node;
     }
 
-    int get_number_of_nodes() {
+    int get_nodes_count() {
         return number_of_nodes;
     }
 
