@@ -98,7 +98,6 @@ StatusType world_cup_t::remove_player(int playerId) {//TODO: add check for top_s
     if (!all_players.does_exist(playerId)) {
         return StatusType::FAILURE;
     }
-    // TODO: Q: can we remove try and catch (failure caught on above if, bad_alloc only happens in new)
     try {
         shared_ptr<Player> player_to_remove = all_players.find(playerId)->info;
         shared_ptr<Team> his_team = player_to_remove->get_team();
@@ -106,6 +105,8 @@ StatusType world_cup_t::remove_player(int playerId) {//TODO: add check for top_s
         int removed_goals = player_to_remove->get_goals();
         int removed_cards = player_to_remove->get_cards();
         bool goalkeeper = player_to_remove->is_goalkeeper();
+
+        players_list.remove_node(player_to_remove->get_player_node());
 
         all_players.remove(playerId);
         all_players_score.remove(stats_to_remove);
@@ -287,8 +288,39 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output) {
 }
 
 output_t<int> world_cup_t::get_closest_player(int playerId, int teamId) {
-    // TODO: Your code goes here
-    return 1006;
+    if (teamId <= 0 || playerId <= 0) {
+        return StatusType::INVALID_INPUT;
+    }
+
+    if (!teams.does_exist(teamId)) {
+        return StatusType::FAILURE;
+    }
+
+    shared_ptr<Team> his_team = teams.find(teamId)->info;
+    if (!his_team->get_players().does_exist(playerId) || all_players.get_nodes_count() == 1) {
+        return StatusType::FAILURE;
+    }
+
+    shared_ptr<Player> player = his_team->get_players().find(playerId)->info;
+    ListNode<Node<Stats,shared_ptr<Player>>>* player_node = player->get_player_node();
+    ListNode<Node<Stats,shared_ptr<Player>>>* next_node = player_node->next;
+    ListNode<Node<Stats,shared_ptr<Player>>>* prev_node = player_node->prev;
+
+    if (!next_node) {
+        return prev_node->data.key.get_id();
+    }
+    if (!prev_node) {
+        return next_node->data.key.get_id();
+    }
+
+    Stats player_stats = Stats(*player);
+    Stats next_stats = next_node->data.key;
+    Stats prev_stats = prev_node->data.key;
+    if(player_stats.is_next_closer(prev_stats, next_stats)) {
+        return next_stats.get_id();
+    } else {
+        return prev_stats.get_id();
+    }
 }
 
 
@@ -301,6 +333,10 @@ static bool does_first_team_win(int first_strength, int second_strength) {
 }
 
 output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
+    if (maxTeamId < 0 || minTeamId < 0 || minTeamId > maxTeamId) {
+        return StatusType::INVALID_INPUT;
+    }
+
     LinkedList<Node<int, shared_ptr<Team>>> valid_nodes;
     LinkedList<Node<int, int>> tourney;
     AVLTree<int, shared_ptr<Team>>::AVL_to_list_inorder(valid_teams.get_root(), valid_nodes);
@@ -311,7 +347,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
     while (curr_team && curr_team->data.info->get_id() < minTeamId) {
         curr_team = curr_team->next;
     }
-    if (!curr_team) { // minTeamId is larger than last id
+    if (!curr_team || curr_team->data.info->get_id() > maxTeamId) { // no teams in given range
         return StatusType::FAILURE;
     }
 

@@ -19,6 +19,7 @@
 #include "AVLTree.h"
 #include "Team.h"
 #include "Player.h"
+#include "Stats.h"
 #include "LinkedList.h"
 #include <memory>
 #include <exception>

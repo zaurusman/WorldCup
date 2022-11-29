@@ -329,9 +329,9 @@ void test_play_match() {
     RUN_TEST(test_play_match_invalid_input);
 }
 
-bool test_knockout_winner_valid() {
+bool test_knockout_winner_win_by_id() {
     world_cup_t my_wc;
-    my_wc.add_team(111, 50);
+    my_wc.add_team(111, 80);
     my_wc.add_player(1, 111, 0, 0, 0, false);
     my_wc.add_player(2, 111, 0, 0, 0, false);
     my_wc.add_player(3, 111, 0, 0, 0, false);
@@ -344,7 +344,7 @@ bool test_knockout_winner_valid() {
     my_wc.add_player(10, 111, 0, 0, 0, false);
     my_wc.add_player(11, 111, 0, 0, 0, true);
 
-    my_wc.add_team(17, 80);
+    my_wc.add_team(17, 50);
     my_wc.add_player(80, 17, 0, 0, 0, false);
     my_wc.add_player(12, 17, 0, 0, 0, false);
     my_wc.add_player(13, 17, 0, 0, 0, false);
@@ -357,7 +357,7 @@ bool test_knockout_winner_valid() {
     my_wc.add_player(110, 17, 0, 0, 0, false);
     my_wc.add_player(111, 17, 0, 0, 0, true);
 
-    my_wc.add_team(13, 80);
+    my_wc.add_team(13, 50);
     my_wc.add_player(91, 13, 0, 0, 0, false);
     my_wc.add_player(92, 13, 0, 0, 0, false);
     my_wc.add_player(93, 13, 0, 0, 0, false);
@@ -370,7 +370,7 @@ bool test_knockout_winner_valid() {
     my_wc.add_player(100, 13, 0, 0, 0, false);
     my_wc.add_player(101, 13, 0, 0, 0, true);
 
-    my_wc.add_team(1000, 51);
+    my_wc.add_team(1000, 1);
     my_wc.add_player(71, 1000, 0, 0, 0, false);
     my_wc.add_player(72, 1000, 0, 0, 0, false);
     my_wc.add_player(73, 1000, 0, 0, 0, false);
@@ -386,8 +386,81 @@ bool test_knockout_winner_valid() {
     return my_wc.knockout_winner(10, 1000).ans() == 17;
 }
 
+bool test_knockout_winner_invalid_input() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 0, 0, 0, false);
+    my_wc.add_player(3, 111, 0, 0, 0, false);
+    my_wc.add_player(4, 111, 0, 0, 0, false);
+    my_wc.add_player(5, 111, 0, 0, 0, false);
+    my_wc.add_player(6, 111, 0, 0, 0, false);
+    my_wc.add_player(7, 111, 0, 0, 0, false);
+    my_wc.add_player(8, 111, 0, 0, 0, false);
+    my_wc.add_player(9, 111, 0, 0, 0, false);
+    my_wc.add_player(10, 111, 0, 0, 0, false);
+    my_wc.add_player(11, 111, 0, 0, 0, true);
+    StatusType s1 = my_wc.knockout_winner(-50, 100).status();
+    StatusType s2 = my_wc.knockout_winner(50, -100).status();
+    StatusType s3 = my_wc.knockout_winner(50, 40).status();
+
+    return s1 == StatusType::INVALID_INPUT && s2 == StatusType::INVALID_INPUT && s3 == StatusType::INVALID_INPUT;
+}
+
+bool test_knockout_winner_none_in_range() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 0, 0, 0, false);
+    my_wc.add_player(3, 111, 0, 0, 0, false);
+    my_wc.add_player(4, 111, 0, 0, 0, false);
+    my_wc.add_player(5, 111, 0, 0, 0, false);
+    my_wc.add_player(6, 111, 0, 0, 0, false);
+    my_wc.add_player(7, 111, 0, 0, 0, false);
+    my_wc.add_player(8, 111, 0, 0, 0, false);
+    my_wc.add_player(9, 111, 0, 0, 0, false);
+    my_wc.add_player(10, 111, 0, 0, 0, false);
+    my_wc.add_player(11, 111, 0, 0, 0, true);
+    StatusType s1 = my_wc.knockout_winner(50, 100).status();
+    return s1 == StatusType::FAILURE;
+}
+
 void test_knockout_winner() {
-    RUN_TEST(test_knockout_winner_valid);
+    RUN_TEST(test_knockout_winner_win_by_id);
+    RUN_TEST(test_knockout_winner_invalid_input);
+    RUN_TEST(test_knockout_winner_none_in_range);
+}
+
+bool test_get_closest_valid() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 6, false);
+
+    return my_wc.get_closest_player(1, 111).ans() == 2
+        && my_wc.get_closest_player(4, 111).ans() == 3
+        && my_wc.get_closest_player(3, 111).ans() == 4;
+}
+
+bool test_get_closest_remove() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.remove_player(3);
+
+    return my_wc.get_closest_player(2, 111).ans() == 1
+        && my_wc.get_closest_player(4, 111).ans() == 2
+        && my_wc.get_closest_player(3, 111).status() == StatusType::FAILURE;
+}
+
+void test_get_closest() {
+    RUN_TEST(test_get_closest_valid);
+    RUN_TEST(test_get_closest_remove);
 }
 
 void test_world_cup() {
@@ -397,8 +470,8 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_remove_player);
     RUN_TEST_GROUP(test_update_player_stats);
     RUN_TEST_GROUP(test_play_match);
-
     RUN_TEST_GROUP(test_knockout_winner);
+    RUN_TEST_GROUP(test_get_closest);
 }
 
 int main() {
