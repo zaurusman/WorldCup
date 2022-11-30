@@ -8,6 +8,7 @@
 #include <iostream>
 #include "Player.h"
 
+class Player;
 class Stats{
     int *player_id;
     int *goals;
@@ -19,7 +20,7 @@ class Stats{
     }
 
 public:
-    Stats(Player &player);
+    explicit Stats(Player &player);
 
     Stats() = default;
 

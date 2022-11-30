@@ -7,7 +7,7 @@
 do { \
   cout << "     Running " << #test << "... "; \
   if (test()) { \
-    cout << "[OK]"; \
+    cout << "[SUCCESS!]"; \
   }                    \
     else { \
     cout << "[Error]"; \
@@ -16,7 +16,7 @@ do { \
 } while(0)
 
 #define RUN_TEST_GROUP(test) \
-cout << "Running Test Group " << #test << "..." << endl; \
+cout <<endl<< "Running Test Group " << #test <<":"<< endl; \
 test()
 
 
@@ -194,10 +194,35 @@ bool test_remove_player_no_player() {
            && my_wc.teams.get_tree_height()==0 && my_wc.all_players.get_tree_height()==0;
 }
 
+bool test_remove_player_remove_add() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(222, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.add_player(11, 222, 1, 1, 0, false);
+    my_wc.add_player(12, 222, 1, 23, 4, false);
+    my_wc.add_player(13, 222, 13, 3, 54, false);
+    my_wc.add_player(14, 222, 1, 4, 13, false);
+    StatusType s1 = my_wc.remove_player(2);
+    StatusType s2 = my_wc.remove_player(4);
+    StatusType s3 = my_wc.remove_player(12);
+    StatusType s4 = my_wc.remove_player(13);
+
+    StatusType s5 = my_wc.add_player(2, 111, 12, 22, 24, false);
+    StatusType s6 = my_wc.add_player(12, 222, 1, 23, 4, false);
+
+    return s1 == StatusType::SUCCESS && s2 == StatusType::SUCCESS && s3 == StatusType::SUCCESS
+        && s4 == StatusType::SUCCESS && s5 == StatusType::SUCCESS && s6 == StatusType::SUCCESS;
+}
+
 void test_remove_player() {
     RUN_TEST(test_remove_player_valid);
     RUN_TEST(test_remove_player_invalid_id);
     RUN_TEST(test_remove_player_no_player);
+    RUN_TEST(test_remove_player_remove_add);
 }
 
 bool test_update_player_stats_valid() {
@@ -458,9 +483,112 @@ bool test_get_closest_remove() {
         && my_wc.get_closest_player(3, 111).status() == StatusType::FAILURE;
 }
 
+
 void test_get_closest() {
     RUN_TEST(test_get_closest_valid);
     RUN_TEST(test_get_closest_remove);
+}
+
+bool test_top_scorer_valid() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(222, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.add_player(11, 222, 1, 1, 0, false);
+    my_wc.add_player(12, 222, 1, 23, 4, false);
+    my_wc.add_player(13, 222, 13, 3, 54, false);
+    my_wc.add_player(14, 222, 1, 4, 13, false);
+
+    return my_wc.get_top_scorer(-1).ans() == 12;
+}
+
+bool test_top_scorer_team() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(222, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.add_player(11, 222, 1, 1, 0, false);
+    my_wc.add_player(12, 222, 1, 23, 4, false);
+    my_wc.add_player(13, 222, 13, 3, 54, false);
+    my_wc.add_player(14, 222, 1, 4, 13, false);
+
+    return my_wc.get_top_scorer(111).ans() == 4 && my_wc.get_top_scorer(222).ans() == 12;
+}
+
+
+bool test_top_scorer_remove() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(222, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.add_player(11, 222, 1, 1, 0, false);
+    my_wc.add_player(12, 222, 1, 23, 4, false);
+    my_wc.add_player(13, 222, 13, 3, 54, false);
+    my_wc.add_player(14, 222, 1, 4, 13, false);
+    StatusType s1 = my_wc.remove_player(2);
+    StatusType s2 =my_wc.remove_player(4);
+    my_wc.remove_player(12);
+    my_wc.remove_player(13);
+
+    return my_wc.get_top_scorer(111).ans() == 3 && my_wc.get_top_scorer(222).ans() == 14 && s1 == StatusType::SUCCESS && s2 == StatusType::SUCCESS;
+}
+
+bool test_top_scorer_update() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(222, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.add_player(11, 222, 1, 1, 0, false);
+    my_wc.add_player(12, 222, 1, 23, 4, false);
+    my_wc.add_player(13, 222, 13, 3, 54, false);
+    my_wc.add_player(14, 222, 1, 4, 13, false);
+    StatusType s1 = my_wc.remove_player(2);
+    StatusType s2 = my_wc.remove_player(4);
+    StatusType s3 = my_wc.remove_player(12);
+    StatusType s4 = my_wc.remove_player(13);
+    StatusType s5 = my_wc.update_player_stats(1,2,100,1);
+    StatusType s6 = my_wc.update_player_stats(11,3,300,1);
+
+    return my_wc.get_top_scorer(111).ans() == 1 && my_wc.get_top_scorer(222).ans() == 11 && s1 == StatusType::SUCCESS && s2 == StatusType::SUCCESS && s3 == StatusType::SUCCESS && s4 == StatusType::SUCCESS && s5 == StatusType::SUCCESS && s6 == StatusType::SUCCESS;
+}
+
+void test_top_scorer() {
+    RUN_TEST(test_top_scorer_valid);
+    RUN_TEST(test_top_scorer_team);
+    RUN_TEST(test_top_scorer_remove);
+    RUN_TEST(test_top_scorer_update);
+}
+
+bool test_unite_teams_valid() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 50);
+    my_wc.add_team(222, 50);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 1, 2, 4, false);
+    my_wc.add_player(3, 111, 1, 3, 5, false);
+    my_wc.add_player(4, 111, 1, 4, 10, false);
+    my_wc.add_player(11, 222, 1, 1, 0, false);
+    my_wc.add_player(12, 222, 1, 23, 4, false);
+    my_wc.add_player(13, 222, 13, 3, 54, false);
+    my_wc.add_player(14, 222, 1, 4, 13, false);
+
+    my_wc.unite_teams(111, 222, 333);
+}
+
+void test_unite_teams() {
+    RUN_TEST(test_unite_teams_valid);
 }
 
 void test_world_cup() {
@@ -472,6 +600,8 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_play_match);
     RUN_TEST_GROUP(test_knockout_winner);
     RUN_TEST_GROUP(test_get_closest);
+    RUN_TEST_GROUP(test_top_scorer);
+    RUN_TEST_GROUP(test_unite_teams);
 }
 
 int main() {

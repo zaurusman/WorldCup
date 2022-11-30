@@ -5,6 +5,7 @@
 #include "Stats.h"
 
 Stats::Stats(Player &player) : player_id(&player.id), goals(&player.goals), cards(&player.cards) {}
+
 Stats& Stats::operator=(const Stats &other) {
     if (this != &other) {
         this->player_id = other.player_id;

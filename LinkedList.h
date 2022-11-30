@@ -55,6 +55,10 @@ public:
         return first;
     }
 
+    ListNode<T>* get_last() {
+        return last;
+    }
+
     void push_front(const T& data) {
         ListNode<T> *to_insert = new ListNode<T>();
         to_insert->data = data;
@@ -247,12 +251,12 @@ public:
         ListNode<T> *new_node;
         new_list.first = new_node;
         ListNode<T> *before = nullptr;
-        while(node1&&node2) {
-            if(node1->data>node2->data) {
+        while(node1 && node2) {
+            if(node1->data > node2->data) {
                 before = new_list.insert_between(before, node2->data, nullptr);
                 node2 = node2->next;
             }
-            else if(node1->data<=node2->data) {
+            else if(node1->data <= node2->data) {
                 before = new_list.insert_between(before, node1->data, nullptr);
                 node1 = node1->next;
             }
@@ -263,7 +267,7 @@ public:
         }
         while(node2) {
             before = new_list.insert_between(before, node2->data, nullptr);
-            node1 = node2->next;
+            node2 = node2->next;
         }
     }
 };

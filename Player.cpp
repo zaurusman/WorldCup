@@ -12,9 +12,8 @@ Player::Player(int id, shared_ptr<Team>& team, int games_played, int goals, int 
     cards(cards),
     goalkeeper(goalkeeper),
     games_not_played(0),
-    player_node(nullptr),
-    next_closest(nullptr),
-    prev_closest(nullptr)
+    all_players_node(nullptr),
+    team_player_node(nullptr)
 {}
 
 
@@ -34,22 +33,27 @@ void Player::add_cards(int cards) {
     this->cards += cards;
 }
 
-int Player::get_id() {
+int Player::get_id() const {
     return id;
 }
-int Player::get_goals() {
+int Player::get_goals() const {
     return goals;
 }
 
-int Player::get_cards() {
+int Player::get_cards() const {
     return cards;
 }
 
-ListNode<Node<Stats,shared_ptr<Player>>>* Player::get_player_node(){
-    return player_node;
+ListNode<Node<Stats,shared_ptr<Player>>>* Player::get_all_players_node() {
+    return all_players_node;
 }
 
-bool Player::is_goalkeeper() {
+
+ListNode<Node<Stats,shared_ptr<Player>>>* Player::get_team_player_node() {
+    return team_player_node;
+}
+
+bool Player::is_goalkeeper() const {
     return goalkeeper;
 }
 
@@ -57,8 +61,12 @@ void Player::set_games_not_played(int games) {
     games_not_played = games;
 }
 
-void Player::set_player_node(ListNode<Node<Stats,shared_ptr<Player>>>* node) {
-    player_node = node;
+void Player::set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>* node) {
+    all_players_node = node;
+}
+
+void Player::set_team_player_node(ListNode<Node<Stats,shared_ptr<Player>>>* node) {
+    team_player_node = node;
 }
 
 shared_ptr<Team>& Player::get_team() {

@@ -7,11 +7,13 @@
 Team::Team(int team_id, int points):
         id(team_id),
         points(points),
-        players(),
+        goalkeepers(0),
         total_goals(0),
         total_cards(0),
         games_played(0),
-        goalkeepers(0)
+        players(),
+        players_score(),
+        players_list()
 {}
 
 bool Team::is_empty() {
@@ -46,10 +48,6 @@ int Team::get_points() {
     return points;
 }
 
-shared_ptr<Player>& Team::get_top_scorer() {
-    return top_scorer;
-}
-
 int Team::get_goalkeepers(){
     return goalkeepers;
 }
@@ -78,20 +76,10 @@ AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
     return players_score;
 }
 
-//void calc_strength(shared_ptr<Node<int,shared_ptr<Player>>>& root,int *strength){
-//    if(!root) {
-//        return;
-//    }
-//    *strength = (root->info->get_goals()-root->info->get_cards());
-//    calc_strength(root->left,strength);
-//    calc_strength(root->right,strength);
-//}
-
-//void Team::update_strength() {
-//    calc_strength(players.get_root(),&points);
-//}
-//
-
 void Team::add_points(int points) {
     this->points+=points;
+}
+
+LinkedList<Node<Stats,shared_ptr<Player>>>& Team::get_players_list() {
+    return players_list;
 }

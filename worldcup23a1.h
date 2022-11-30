@@ -40,8 +40,10 @@ public: //private:
     static const int WINNER_POINTS = 3;
     static const int DRAW_POINTS = 1;
 
+    void remove_player_aux(shared_ptr<Player>& player_to_remove,shared_ptr<Team>& his_team,int playerId);
+    void add_player_to_team(int gamesPlayed,int goals, int cards, int teamId,int playerId,shared_ptr<Team>& his_team, bool goalKeeper);
 
-//public:
+public:
     // <DO-NOT-MODIFY> {
 
     world_cup_t();
@@ -79,6 +81,8 @@ public: //private:
     output_t<int> knockout_winner(int minTeamId, int maxTeamId);
 
     // } </DO-NOT-MODIFY>
+
+
 };
 
 #endif // WORLDCUP23A1_H_

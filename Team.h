@@ -8,6 +8,7 @@
 #include "wet1util.h"
 #include "AVLTree.h"
 #include "Player.h"
+#include "Stats.h"
 #include <memory>
 
 class Player;
@@ -17,13 +18,13 @@ class Team {
 private:
     int id;
     int points;
+    int goalkeepers;
+    int total_goals;
+    int total_cards;
+    int games_played;
     AVLTree<int, shared_ptr<Player>> players;
     AVLTree<Stats, shared_ptr<Player>> players_score;
-    int total_goals = 0;
-    int total_cards = 0;
-    int games_played = 0;
-    shared_ptr<Player> top_scorer;
-    int goalkeepers = 0;
+    LinkedList<Node<Stats,shared_ptr<Player>>> players_list;
 
 public:
     Team() = default;
@@ -47,7 +48,7 @@ public:
 
     int get_points();
 
-    shared_ptr<Player>& get_top_scorer();
+    LinkedList<Node<Stats,shared_ptr<Player>>>& get_players_list();
 
     int get_goalkeepers();
 

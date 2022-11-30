@@ -23,9 +23,26 @@ class Node {
             key(key), info(info), left(nullptr), right(nullptr), height(0) {}
 
         Node<Key,Info>() = default;
+
+        bool operator>(const Node& other) const {
+            return key > other.key;
+        }
+        bool operator<(const Node& other) const {
+            return key < other.key;
+        }
+        bool operator>=(const Node& other) const {
+            return !(key < other.key);
+        }
+        bool operator<=(const Node& other) const {
+            return !(key > other.key);
+        }
+        Node& operator=(const Node& other) {//TODO: check this.
+            if(this != &other) {
+            this->key = other.key;
+            this->info = other.info;
+            }
+        }
 };
-
-
 
 template<class Key, class Info>
 class AVLTree {
@@ -110,7 +127,7 @@ private:
         return get_height(root->left) - get_height(root->right);
     }
 
-    void insert_rec(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info){
+    static void insert_rec(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info){
         if(!root){
             root = make_shared<Node<Key,Info>>(Node<Key,Info>(key,info));
         }
@@ -128,7 +145,7 @@ private:
         root->height = 1 + max(get_height(root->left), get_height(root->right));
     };
 
-    void insert_rec_p(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info, bool* is_parent,shared_ptr<Node<Key,Info>>& parent){
+    static void insert_rec_p(shared_ptr<Node<Key,Info>>& root, Key const &key, Info const &info, bool* is_parent,shared_ptr<Node<Key,Info>>& parent){
         if(!root){
             root = make_shared<Node<Key,Info>>(Node<Key,Info>(key,info));
             *is_parent = true;
@@ -156,63 +173,63 @@ private:
         root->height = 1 + max(get_height(root->left), get_height(root->right));
     };
 
-    void remove_rec(shared_ptr<Node<Key,Info>>& root, const Key &key) {
-        if (!root) {
+    static void remove_rec(shared_ptr<Node<Key,Info>>& curr, const Key &key) {
+        if (!curr) {
             throw KeyDoesNotExist();
         }
 
-        else if(key < root->key){
-            remove_rec(root->left,key);
-            root->height = 1 + max(get_height(root->left), get_height(root->right));
+        else if(key < curr->key){
+            remove_rec(curr->left,key);
+            curr->height = 1 + max(get_height(curr->left), get_height(curr->right));
         }
-        else if(root->key < key){
-            remove_rec(root->right,key);
-            root->height = 1 + max(get_height(root->left), get_height(root->right));
+        else if(curr->key < key){
+            remove_rec(curr->right,key);
+            curr->height = 1 + max(get_height(curr->left), get_height(curr->right));
         }
         else {   // root->key == key
-            if (!root->left && !root->right) { // TODO: Export condition to function `isLeaf(Node)`
-                root.reset();
+            if (!curr->left && !curr->right) { // TODO: Export condition to function `isLeaf(Node)`
+                curr.reset();
             }
 //            else if (root-> left && root-> right) {}
 //            else if (!root-> left && !root -> right) {}
 //            else if (root -> right) {}
 //            else {}
                 // removed node has only left son
-            else if (root->left && !root->right) {
-                root = root->left;
+            else if (curr->left && !curr->right) {
+                curr = curr->left;
             }
                 // removed node has only right son
-            else if (!root->left && root->right) {
-                root = root->right;
+            else if (!curr->left && curr->right) {
+                curr = curr->right;
             }
                 // removed node has both sons
             else {
-                shared_ptr<Node<Key,Info>> next = get_next_inorder(root);
-                root->key = next->key;
-                root->info = next-> info;
-                remove_rec(root->right, next->key);
+                shared_ptr<Node<Key,Info>> next = get_next_inorder(curr);
+                curr->key = next->key;
+                curr->info = next-> info;
+                remove_rec(curr->right, curr->key);//TODO: the problem is with the values (NULL)
             }
         }
 
-        balance(root);
+        balance(curr);
     }
 
-    shared_ptr<Node<Key,Info>> get_next_inorder(shared_ptr<Node<Key,Info>>& root) {
-        root = root->right;
-        while (root->left) {
-            root = root->left;
+    static shared_ptr<Node<Key,Info>> get_next_inorder(shared_ptr<Node<Key,Info>> curr) {
+        curr = curr->right;
+        while (curr->left) {
+            curr = curr->left;
         }
-        return root;
+        return curr;
     }
 
-    shared_ptr<Node<Key,Info>> get_prev_inorder(shared_ptr<Node<Key,Info>>& root) {
-        root = root->left;
+    shared_ptr<Node<Key,Info>> get_prev_inorder(shared_ptr<Node<Key,Info>> curr) {
+        curr = curr->left;
 
-        while (root->right) {
-            root = root->right;
+        while (curr->right) {
+            curr = curr->right;
         }
 
-        return root;
+        return curr;
     }
 
     static void LL_rotate(shared_ptr<Node<Key,Info>>& root) {
@@ -303,15 +320,16 @@ private:
     }
 
 
-    static void print_inorder(shared_ptr<Node<Key,Info>>& root) {
-        if(!root) {
+    static void print_inorder(shared_ptr<Node<Key,Info>>& curr) {
+        if(!curr) {
             return;
         }
 
-        print_inorder(root->left);
-        std::cout << (root->key) << ", ";
-        print_inorder(root->right);
+        print_inorder(curr->left);
+        std::cout << (curr->key) << ", ";
+        print_inorder(curr->right);
     }
+  //TODO: tree creator with while, int nodes_count, int state. - notice: do not change root. left side first.
 
 
 };
