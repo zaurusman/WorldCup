@@ -558,6 +558,7 @@ bool test_top_scorer_update() {
     StatusType s2 = my_wc.remove_player(4);
     StatusType s3 = my_wc.remove_player(12);
     StatusType s4 = my_wc.remove_player(13);
+    my_wc.add_player(4, 111, 1, 400, 10, false);
     StatusType s5 = my_wc.update_player_stats(1,2,100,1);
     StatusType s6 = my_wc.update_player_stats(11,3,300,1);
 

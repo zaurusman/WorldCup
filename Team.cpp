@@ -24,10 +24,6 @@ int Team::get_id() {
     return id;
 }
 
-int Team::get_team_power() {
-    return points + get_players_count() * (total_goals - total_cards);
-}
-
 int Team::get_games_played() {
     return games_played;
 }
@@ -99,10 +95,6 @@ AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
     return players_score;
 }
 
-void Team::add_points(int points) {
-    this->points+=points;
-}
-
-LinkedList<Node<Stats,shared_ptr<Player>>>& Team::get_players_list() {
-    return players_list;
+void Team::add_points(int new_points) {
+    this->points+=new_points;
 }
