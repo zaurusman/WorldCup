@@ -20,11 +20,11 @@ bool Team::is_empty() {
     return get_players_count() == 0;
 }
 
-int Team::get_id() {
+int Team::get_id() const {
     return id;
 }
 
-int Team::get_games_played() {
+int Team::get_games_played() const {
     return games_played;
 }
 
@@ -36,11 +36,11 @@ int Team::get_players_count() {
     return players.get_node_count();
 }
 
-int Team::get_strength() {
+int Team::get_strength() const {
     return points + total_goals - total_cards;
 }
 
-int Team::get_points() {
+int Team::get_points() const {
     return points;
 }
 
@@ -48,19 +48,19 @@ void Team::add_goalkeeper(int goalkeeper) {
     goalkeepers += goalkeeper;
 }
 
-bool Team::has_goalkeeper() {
+bool Team::has_goalkeeper() const {
     return goalkeepers > 0;
 }
 
-int Team::get_goalkeepers() {
+int Team::get_goalkeepers() const {
     return goalkeepers;
 }
 
-int Team::get_goals() {
+int Team::get_goals() const {
     return total_goals;
 }
 
-int Team::get_cards() {
+int Team::get_cards() const {
     return total_cards;
 }
 

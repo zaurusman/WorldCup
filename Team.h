@@ -34,31 +34,31 @@ public:
 
     bool is_empty();
 
-    int get_id();
+    int get_id() const;
 
-    int get_games_played();
+    int get_games_played() const;
 
     void add_games_played(int games);
 
     int get_players_count();
 
-    int get_strength();
+    int get_strength() const;
 
-    int get_points();
+    int get_points() const;
 
     void add_goalkeeper(int goalkeeper);
 
-    bool has_goalkeeper();
+    bool has_goalkeeper() const;
 
-    int get_goalkeepers();
+    int get_goalkeepers() const;
 
     void add_total_goals(int goals);
 
     void add_total_cards(int cards);
 
-    int get_goals();
+    int get_goals() const;
 
-    int get_cards();
+    int get_cards() const;
 
     AVLTree<int, shared_ptr<Player>>& get_players();
 

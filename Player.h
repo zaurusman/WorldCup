@@ -20,13 +20,14 @@ class Player {
     bool goalkeeper;
     int games_not_played;
     ListNode<Node<Stats,shared_ptr<Player>>>* all_players_node;
-    ListNode<Node<Stats,shared_ptr<Player>>>* team_player_node;
     friend class Stats;
 
 public:
     Player(int id, shared_ptr<Team>& team, int games_played, int goals, int cards, bool goalkeeper);
 
     ~Player() = default;
+
+    Player& operator=(const Player & other) = default;
 
     int get_games_played();
 
@@ -44,8 +45,6 @@ public:
 
     ListNode<Node<Stats,shared_ptr<Player>>>* get_all_players_node();
 
-    ListNode<Node<Stats,shared_ptr<Player>>>* get_team_player_node();
-
     bool is_goalkeeper() const;
 
     void set_games_not_played(int games_not_played);
@@ -53,8 +52,6 @@ public:
     void set_games_played(int games_played);
 
     void set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>*);
-
-    void set_team_player_node(ListNode<Node<Stats,shared_ptr<Player>>>*);
 
     shared_ptr<Team>& get_team();
 };
