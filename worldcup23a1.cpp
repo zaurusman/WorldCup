@@ -5,7 +5,7 @@
 #include "LinkedList.h"
 
 
-world_cup_t::world_cup_t() {}
+world_cup_t::world_cup_t() = default;
 
 world_cup_t::~world_cup_t() = default;
 
@@ -13,7 +13,7 @@ StatusType world_cup_t::add_team(int team_id, int points) {
     if (team_id <= 0 || points < 0)
         return StatusType::INVALID_INPUT;
     try {
-        shared_ptr<Team> new_team(new Team(team_id, points));
+        shared_ptr<Team> new_team = make_shared<Team>(team_id, points);
         teams.insert(team_id, new_team);
     } catch (const KeyAlreadyExists &e) {
         return StatusType::FAILURE;
@@ -28,7 +28,7 @@ StatusType world_cup_t::remove_team(int teamId) {
         return StatusType::INVALID_INPUT;
 
     try {
-        if (teams.find(teamId)->info->get_players().get_tree_height() != 0) {//PlayersTree need to be added to team.
+        if (teams.find(teamId)->info->get_players().get_node_count() == 0 && teams.find(teamId)->info->get_players_score().get_node_count() == 0) {
             teams.remove(teamId);
             return StatusType::SUCCESS;
         }
@@ -42,8 +42,7 @@ StatusType world_cup_t::remove_team(int teamId) {
 
 StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
                                    int goals, int cards, bool goalKeeper) {
-    if (playerId <= 0 || teamId <= 0 || gamesPlayed < 0 || goals < 0 || cards < 0 ||
-        gamesPlayed == 0 && (goals > 0 || cards > 0)) {
+    if (playerId <= 0 || teamId <= 0 || gamesPlayed < 0 || goals < 0 || cards < 0 || (gamesPlayed == 0  && (goals > 0 || cards > 0))) {
         return StatusType::INVALID_INPUT;
     }
 
@@ -255,7 +254,8 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
 
     AVLTree<int,shared_ptr<Player>>::fill_empty_tree(united_players.get_root(), players_list_merged);
     AVLTree<Stats,shared_ptr<Player>>::fill_empty_tree(united_players_score.get_root(), players_score_merged);
-
+    team1->info->empty_players();
+    team2->info->empty_players();
     shared_ptr<Team> new_team = make_shared<Team>(newTeamId, (teams.find(teamId1)->info->get_points() + teams.find(teamId2)->info->get_points()));
     remove_team(teamId1);
     remove_team(teamId2);
@@ -274,8 +274,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
 output_t<int> world_cup_t::get_top_scorer(int teamId) {
     if (teamId == 0) {
         return StatusType::INVALID_INPUT;
-    } else if (teamId > 0 && (!teams.does_exist(teamId) || teams.find(teamId)->info->get_players_count() == 0) ||
-               teamId < 0 && all_players.get_node_count() == 0) {
+    } else if (((teamId > 0 )&& (!teams.does_exist(teamId) || teams.find(teamId)->info->get_players_count() == 0)) || ((teamId < 0) && all_players.get_node_count() == 0)) {
         return StatusType::FAILURE;
     } else if (teamId < 0) {
         return players_list.get_last()->data.key.get_id();

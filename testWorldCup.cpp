@@ -615,7 +615,7 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_unite_teams);
 }
 
-int main2() {
+int main3() {
     RUN_TEST_GROUP(test_world_cup);
     return 0;
 }

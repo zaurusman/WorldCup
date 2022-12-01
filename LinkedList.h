@@ -59,7 +59,7 @@ public:
     }
 
     void push_front(const T& data) {
-        ListNode<T> *to_insert = new ListNode<T>();
+        auto *to_insert = new ListNode<T>();
         to_insert->data = data;
         if(first) {
             to_insert->next = first;
@@ -88,7 +88,7 @@ public:
     }
 
     void push_back(const T& data) {
-        ListNode<T> *to_insert = new ListNode<T>();
+        auto *to_insert = new ListNode<T>();
         to_insert->data = data;
         if(last) {
             to_insert->prev = last;
@@ -100,7 +100,7 @@ public:
     }
 
     ListNode<T> *insert_after(ListNode<T> *before, const T& node) {
-        ListNode<T> *to_insert = new ListNode<T>();
+        auto *to_insert = new ListNode<T>();
         to_insert->data = node;
         if (!before && !last) {
             // insert to empty list
@@ -133,7 +133,7 @@ public:
     }
 
     ListNode<T> *insert_before(ListNode<T> *after, const T& node) {
-        ListNode<T> *to_insert = new ListNode<T>();
+        auto *to_insert = new ListNode<T>();
         to_insert->data = node;
         if (!after && !first) {
             // insert to empty list
@@ -166,7 +166,7 @@ public:
     }
 
     ListNode<T> *insert_between(ListNode<T> *before, const T& node, ListNode<T> *after) {
-        ListNode<T> *to_insert = new ListNode<T>();
+        auto *to_insert = new ListNode<T>();
         to_insert->data = node;
 
         if (before && !after) {
@@ -181,7 +181,7 @@ public:
             after->prev = to_insert;
             to_insert->prev = nullptr;
             first = to_insert;
-        } else if (!before && !after) {
+        } else if (!before) {
             // insert to empty list
             to_insert->next = nullptr;
             to_insert->prev = nullptr;
@@ -198,19 +198,19 @@ public:
         return to_insert;
     }
 
-    void print_list() {
-        ListNode<T> *temp = first;
-
-        if (!temp) {
-            return;
-        }
-
-        while (temp->next) {
-            cout << temp->data << ",";
-            temp = temp->next;
-        }
-        cout << temp->data << "," << endl;
-    }
+//    void print_list() {
+//        ListNode<T> *temp = first;
+//
+//        if (!temp) {
+//            return;
+//        }
+//
+//        while (temp->next) {
+//            cout << temp->data << ",";
+//            temp = temp->next;
+//        }
+//        cout << temp->data << "," << endl;
+//    }
 
     void remove_node(ListNode<T> *node) {
         ListNode<T> *before = node->prev;
@@ -226,7 +226,7 @@ public:
             // removing last node
             last = before;
             last->next = nullptr;
-        } else if (!before && !after) {
+        } else if (!before) {
             // removing only node
             first = nullptr;
             last = nullptr;
@@ -240,23 +240,19 @@ public:
         delete node;
     }
 
-    int get_nodes_count() {
-        return number_of_nodes;
-    }
-
-    void list_to_array(T* output) {
-        // output is the array allocated by the caller
-        ListNode<T> *temp = first;
-        for (int i = 0; i < number_of_nodes; i++) {
-            output[i] = temp->data;
-            temp = temp->next;
-        }
-    }
+//    void list_to_array(T* output) {
+//        // output is the array allocated by the caller
+//        ListNode<T> *temp = first;
+//        for (int i = 0; i < number_of_nodes; i++) {
+//            output[i] = temp->data;
+//            temp = temp->next;
+//        }
+//    }
 
     static void merge_sorted(LinkedList<T> &list1, LinkedList<T> &list2, LinkedList<T>& new_list) {
         ListNode<T> *node1 = list1.get_first();
         ListNode<T> *node2 = list2.get_first();
-        ListNode<T> *new_node;
+        ListNode<T> *new_node=nullptr;
         new_list.first = new_node;
         ListNode<T> *before = nullptr;
         while(node1 && node2) {

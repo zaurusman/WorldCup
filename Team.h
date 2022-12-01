@@ -74,6 +74,9 @@ public:
 
     void add_points(int points);
 
+    void empty_players();
+
+
 };
 
 

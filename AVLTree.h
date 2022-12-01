@@ -37,11 +37,12 @@ class Node {
         bool operator<=(const Node& other) const {
             return !(key > other.key);
         }
-        Node& operator=(const Node& other) {//TODO: check this.
+        Node& operator=(const Node& other) {
             if(this != &other) {
-            this->key = other.key;
-            this->info = other.info;
+                this->key = other.key;
+                this->info = other.info;
             }
+            return *this;
         }
 };
 
@@ -72,10 +73,10 @@ public:
         node_count--;
     }
 
-    void inorder() {
-        print_inorder(root);
-        std::cout << std::endl;
-    }
+//    void inorder() {
+//        print_inorder(root);
+//        std::cout << std::endl;
+//    }
 
     bool does_exist(Key key) {
         try {
@@ -96,10 +97,6 @@ public:
 
     shared_ptr<Node<Key,Info>>& find(Key& key){
         return find_rec(root,key);
-    }
-
-    shared_ptr<Node<Key,Info>> find_parent(Key& key){
-        return find_parent_rec(root,key, nullptr);
     }
 
     static void AVL_to_list_inorder(shared_ptr<Node<Key,Info>>& root,LinkedList<Node<Key,Info>>& out) {
@@ -130,19 +127,19 @@ public:
         make_complete_tree_rec(tree, node->right, tree_height - 1);
     }
 
-    void remove_extra_nodes(AVLTree<Key,Info>& tree, shared_ptr<Node<Key, Info>>& root, int* extra_nodes) {
-        if (!root || *extra_nodes == 0) {
+    void remove_extra_nodes(AVLTree<Key,Info>& tree, shared_ptr<Node<Key, Info>>& curr, int* extra_nodes) {
+        if (!curr || *extra_nodes == 0) {
             return;
         }
-        if (!root->right && !root->left) {
-            root.reset();
+        if (!curr->right && !curr->left) {
+            curr.reset();
             (*extra_nodes)--;
             tree.node_count--;
             return;
         }
 
-        remove_extra_nodes(tree, root->right, extra_nodes);
-        remove_extra_nodes(tree, root->left, extra_nodes);
+        remove_extra_nodes(tree, curr->right, extra_nodes);
+        remove_extra_nodes(tree, curr->left, extra_nodes);
     }
 
     static AVLTree<Key,Info> make_almost_complete_tree(int node_count) {
@@ -283,16 +280,16 @@ private:
         }
         return curr;
     }
-
-    shared_ptr<Node<Key,Info>> get_prev_inorder(shared_ptr<Node<Key,Info>> curr) {
-        curr = curr->left;
-
-        while (curr->right) {
-            curr = curr->right;
-        }
-
-        return curr;
-    }
+//
+//    shared_ptr<Node<Key,Info>> get_prev_inorder(shared_ptr<Node<Key,Info>> curr) {
+//        curr = curr->left;
+//
+//        while (curr->right) {
+//            curr = curr->right;
+//        }
+//
+//        return curr;
+//    }
 
     static void LL_rotate(shared_ptr<Node<Key,Info>>& root) {
         // B = root, A = root->left

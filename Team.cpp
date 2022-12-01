@@ -98,3 +98,14 @@ AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {
 void Team::add_points(int new_points) {
     this->points+=new_points;
 }
+
+void Team::empty_players() {
+    while(this->get_players().get_root())
+    {
+        this->get_players().remove(this->get_players().get_root()->key);
+    }
+    while(this->get_players_score().get_root())
+    {
+        this->get_players_score().remove(this->get_players_score().get_root()->key);
+    }
+}
