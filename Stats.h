@@ -34,7 +34,6 @@ public:
 
     int get_id();
 
-    static int abs(int x);
 };
 
 #endif //WORLDCUP_STATS_H

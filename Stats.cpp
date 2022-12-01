@@ -49,13 +49,6 @@ bool Stats::operator>(const Stats &other) const {
     return false;
 }
 
-int Stats::abs(int x) {
-    if (x < 0) {
-        return -x;
-    }
-    return x;
-}
-
 bool Stats::is_next_closer(Stats prev, Stats next) {
     if (*next.goals - *goals < *goals - *prev.goals) {
         return true;

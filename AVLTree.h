@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <iostream>
+#include <cmath>
 #include "LinkedList.h"
 #include "Exception.h"
 using namespace std;
@@ -47,7 +48,7 @@ class Node {
 template<class Key, class Info>
 class AVLTree {
 public:
-    AVLTree() : root(nullptr), nodes_count(0){}
+    AVLTree() : root(nullptr), node_count(0){}
 
     shared_ptr<Node<Key,Info>>& get_root() {
         return root;
@@ -57,18 +58,18 @@ public:
 
     void insert(const Key &key,const Info &info){
         insert_rec(root, key,info);
-        nodes_count++;
+        node_count++;
     }
 
     void insert_p(const Key &key,const Info &info,shared_ptr<Node<Key,Info>>& parent){
         bool is_parent = false;
         insert_rec_p(root, key,info, &is_parent,parent);
-        nodes_count++;
+        node_count++;
     }
 
     void remove(const Key &key){
         remove_rec(root, key);
-        nodes_count--;
+        node_count--;
     }
 
     void inorder() {
@@ -89,11 +90,11 @@ public:
         return get_height(root);
     }
 
-    int get_nodes_count() {
-        return nodes_count;
+    int get_node_count() {
+        return node_count;
     }
 
-    shared_ptr<Node<Key,Info>> find(Key& key){
+    shared_ptr<Node<Key,Info>>& find(Key& key){
         return find_rec(root,key);
     }
 
@@ -110,9 +111,70 @@ public:
         AVL_to_list_inorder(root->left,out);
     }
 
+    static AVLTree<Key,Info> make_complete_tree(int tree_height) {
+        AVLTree<Key,Info> tree;
+        make_complete_tree_rec(tree, tree.get_root(), tree_height);
+        return tree;
+    }
+
+    static void make_complete_tree_rec(AVLTree<Key,Info>& tree, shared_ptr<Node<Key,Info>>& node, int tree_height) {
+        if (tree_height == -1) {
+            node = nullptr;
+            return;
+        }
+
+        node = make_shared<Node<Key,Info>>();
+        node->height = tree_height;
+        tree.node_count++;
+        make_complete_tree_rec(tree, node->left, tree_height - 1);
+        make_complete_tree_rec(tree, node->right, tree_height - 1);
+    }
+
+    void remove_extra_nodes(AVLTree<Key,Info>& tree, shared_ptr<Node<Key, Info>>& root, int* extra_nodes) {
+        if (!root || *extra_nodes == 0) {
+            return;
+        }
+        if (!root->right && !root->left) {
+            root.reset();
+            (*extra_nodes)--;
+            tree.node_count--;
+            return;
+        }
+
+        remove_extra_nodes(tree, root->right, extra_nodes);
+        remove_extra_nodes(tree, root->left, extra_nodes);
+    }
+
+    static AVLTree<Key,Info> make_almost_complete_tree(int node_count) {
+        int tree_height = ceil(log2(node_count + 1)) - 1;
+        AVLTree<Key,Info> tree = make_complete_tree(tree_height);
+        int extra_nodes = tree.get_node_count() - node_count;
+        tree.remove_extra_nodes(tree, tree.get_root(), &extra_nodes);
+        return tree;
+    }
+
+    static void fill_empty_tree(shared_ptr<Node<Key,Info>>& node, LinkedList<Node<Key,Info>>& list) {
+        if (!node) {
+            return;
+        }
+
+        fill_empty_tree(node->left, list);
+        *node = list.pop_front();
+        fill_empty_tree(node->right, list);
+    }
+
+    shared_ptr<Node<Key,Info>> get_max() {
+        shared_ptr<Node<Key,Info>> temp = root;
+        while (temp && temp->right) {
+            temp = temp->right;
+        }
+
+        return temp;
+    }
+
 private:
     shared_ptr<Node<Key,Info>> root;
-    int nodes_count = 0;
+    int node_count = 0;
 
     static int get_height(shared_ptr<Node<Key, Info>>& root) {
         if(!root) {
@@ -291,7 +353,7 @@ private:
         }
     }
 
-    static shared_ptr<Node<Key,Info>> find_rec(shared_ptr<Node<Key,Info>>& root,Key& key){
+    static shared_ptr<Node<Key,Info>>& find_rec(shared_ptr<Node<Key,Info>>& root,Key& key){
         if(!root){
             throw KeyDoesNotExist();
         }
@@ -329,8 +391,8 @@ private:
         std::cout << (curr->key) << ", ";
         print_inorder(curr->right);
     }
-  //TODO: tree creator with while, int nodes_count, int state. - notice: do not change root. left side first.
 
+  //TODO: tree creator with while, int nodes_count, int state. - notice: do not change root. left side first.
 
 };
 

@@ -96,15 +96,17 @@ void world_cup_t::add_player_to_team(int gamesPlayed,int goals, int cards, int t
     } else {
         to_add->set_all_players_node(players_list.insert_before(nullptr, *all_players_score.find(stats_to_add)));
     }
-    if (team_parent) {
-        if (team_parent->key > stats_to_add) {
-            to_add->set_team_player_node(his_team->get_players_list().insert_before(team_parent->info->get_team_player_node(), *his_team->get_players_score().find(stats_to_add)));
-        } else {
-            to_add->set_team_player_node(his_team->get_players_list().insert_after(team_parent->info->get_team_player_node(), *his_team->get_players_score().find(stats_to_add)));
-        }
-    } else {
-        to_add->set_team_player_node(his_team->get_players_list().insert_before(nullptr, *his_team->get_players_score().find(stats_to_add)));
-    }
+//    if (team_parent) {
+//        if (team_parent->key > stats_to_add) {
+//            to_add->set_team_player_node(his_team->get_players_list().insert_before(team_parent->info->get_team_player_node(), *his_team->get_players_score().find(stats_to_add)));
+//        } else {
+//            to_add->set_team_player_node(his_team->get_players_list().insert_after(team_parent->info->get_team_player_node(), *his_team->get_players_score().find(stats_to_add)));
+//        }
+//    } else {
+//        to_add->set_team_player_node(his_team->get_players_list().insert_before(nullptr, *his_team->get_players_score().find(stats_to_add)));
+//    }
+
+    his_team->set_top_scorer(his_team->get_players_score().get_max());
 }
 
 StatusType world_cup_t::remove_player(int playerId) {
@@ -143,7 +145,7 @@ void world_cup_t::remove_player_aux(shared_ptr<Player>& player_to_remove,shared_
     his_team->get_players_score().remove(stats_to_remove);
 
     players_list.remove_node(player_to_remove->get_all_players_node());
-    his_team->get_players_list().remove_node(player_to_remove->get_team_player_node());
+    his_team->set_top_scorer(his_team->get_players_score().get_max());
 
     his_team->add_total_goals(-1 * removed_goals);
     his_team->add_total_cards(-1 * removed_cards);
@@ -232,56 +234,73 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
 
     shared_ptr<Node<int,shared_ptr<Team>>> team1 = teams.find(teamId1);
     shared_ptr<Node<int,shared_ptr<Team>>> team2 = teams.find(teamId2);
-
+    int node_count1 = team1->info->get_players().get_node_count();
+    int node_count2 = team2->info->get_players().get_node_count();
     LinkedList<Node<int,shared_ptr<Player>>> players_list1;
     LinkedList<Node<int,shared_ptr<Player>>> players_list2;
     LinkedList<Node<int,shared_ptr<Player>>> players_list_merged;
     LinkedList<Node<Stats,shared_ptr<Player>>> players_score1;
     LinkedList<Node<Stats,shared_ptr<Player>>> players_score2;
     LinkedList<Node<Stats,shared_ptr<Player>>> players_score_merged;
+    LinkedList<Node<Stats,shared_ptr<Player>>> players_score_merge2;
     AVLTree<int,shared_ptr<Player>>::AVL_to_list_inorder(team1->info->get_players().get_root(), players_list1);
     AVLTree<int,shared_ptr<Player>>::AVL_to_list_inorder(team2->info->get_players().get_root(), players_list2);
     AVLTree<Stats,shared_ptr<Player>>::AVL_to_list_inorder(team1->info->get_players_score().get_root(), players_score1);
     AVLTree<Stats,shared_ptr<Player>>::AVL_to_list_inorder(team2->info->get_players_score().get_root(), players_score2);
 
     LinkedList<Node<int,shared_ptr<Player>>>::merge_sorted(players_list1, players_list2, players_list_merged);
+
     LinkedList<Node<Stats,shared_ptr<Player>>>::merge_sorted(players_score1, players_score2, players_score_merged);
+    LinkedList<Node<Stats,shared_ptr<Player>>>::merge_sorted(players_score1, players_score2, players_score_merge2);
 
+    ListNode<Node<int,shared_ptr<Player>>>* temp_player = players_list_merged.get_first();
+    while (temp_player) {
+        temp_player->data.info->set_games_played(temp_player->data.info->get_games_played());
+        temp_player = temp_player->next;
+    }
 
+    AVLTree<int,shared_ptr<Player>> united_players = AVLTree<int,shared_ptr<Player>>::make_almost_complete_tree(node_count1 + node_count2);
+    AVLTree<Stats,shared_ptr<Player>> united_players_score = AVLTree<Stats,shared_ptr<Player>>::make_almost_complete_tree(node_count1 + node_count2);
 
-    shared_ptr<Team> newTeam = make_shared<Team>(newTeamId, (teams.find(teamId1)->info->get_points() +
-                                                             teams.find(teamId2)->info->get_points()));
-    teams.insert(newTeamId, newTeam);
+    AVLTree<int,shared_ptr<Player>>::fill_empty_tree(united_players.get_root(), players_list_merged);
+    AVLTree<Stats,shared_ptr<Player>>::fill_empty_tree(united_players_score.get_root(), players_score_merged);
+    shared_ptr<Team> new_team = make_shared<Team>(newTeamId, (teams.find(teamId1)->info->get_points() + teams.find(teamId2)->info->get_points()));
+    new_team->set_players(united_players);
+    new_team->set_players_score(united_players_score);
+    teams.insert(newTeamId, new_team);
+    new_team->add_goalkeeper(team1->info->get_goalkeepers() + team2->info->get_goalkeepers());
+    new_team->add_total_goals(team1->info->get_goals() + team2->info->get_goals());
+    new_team->add_total_cards(team1->info->get_cards() + team2->info->get_cards());
+    new_team->set_top_scorer(new_team->get_players_score().get_max());
 
+    remove_team(teamId1);
+    remove_team(teamId2);
 
-    //TODO: transfer players to the new group, delete old groups, update power and other stats.
-    //TODO: check top_scorer in the new team.
     return StatusType::SUCCESS;
-
 }
 
 output_t<int> world_cup_t::get_top_scorer(int teamId) {
     if (teamId == 0) {
         return StatusType::INVALID_INPUT;
     } else if (teamId > 0 && (!teams.does_exist(teamId) || teams.find(teamId)->info->get_players_count() == 0) ||
-               teamId < 0 && all_players.get_nodes_count() == 0) {
+               teamId < 0 && all_players.get_node_count() == 0) {
         return StatusType::FAILURE;
     } else if (teamId < 0) {
         return players_list.get_last()->data.key.get_id();
 
     } else {
-        return teams.find(teamId)->info->get_players_list().get_last()->data.key.get_id();
+        return teams.find(teamId)->info->get_top_scorer()->info->get_id();
     }
 
 }
 
 output_t<int> world_cup_t::get_all_players_count(int teamId) {
     if (teamId < 0) {
-        return all_players.get_nodes_count();
+        return all_players.get_node_count();
     } else if (teamId > 0) {
         try {
             shared_ptr<Team> team_obj = teams.find(teamId)->info;
-            return team_obj->get_players().get_nodes_count();
+            return team_obj->get_players().get_node_count();
         } catch (const KeyDoesNotExist &e) {
             return StatusType::FAILURE;
         }
@@ -337,7 +356,7 @@ output_t<int> world_cup_t::get_closest_player(int playerId, int teamId) {
     }
 
     shared_ptr<Team> his_team = teams.find(teamId)->info;
-    if (!his_team->get_players().does_exist(playerId) || all_players.get_nodes_count() == 1) {
+    if (!his_team->get_players().does_exist(playerId) || all_players.get_node_count() == 1) {
         return StatusType::FAILURE;
     }
 

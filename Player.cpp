@@ -61,6 +61,10 @@ void Player::set_games_not_played(int games) {
     games_not_played = games;
 }
 
+void Player::set_games_played(int games) {
+    this->games_played = games;
+}
+
 void Player::set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>* node) {
     all_players_node = node;
 }

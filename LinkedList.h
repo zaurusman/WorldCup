@@ -10,7 +10,6 @@
 
 using namespace std;
 
-
 template<class T>
 class ListNode {
 public:
@@ -69,6 +68,23 @@ public:
             last = to_insert;
         }
         first = to_insert;
+    }
+
+    T pop_front() {
+        if (!first) {
+            throw EmptyList();
+        }
+        ListNode<T>* temp = first;
+        T temp_val = temp->data;
+        if (first->next) {
+            first = first->next;
+        } else {
+            first = nullptr;
+            last = nullptr;
+        }
+
+        delete temp;
+        return temp_val;
     }
 
     void push_back(const T& data) {
@@ -235,17 +251,9 @@ public:
             output[i] = temp->data;
             temp = temp->next;
         }
-        // TODO: should user allocate memory or is this fine? yes
     }
 
     static void merge_sorted(LinkedList<T> &list1, LinkedList<T> &list2, LinkedList<T>& new_list) {
-
-        // (1) Create a new head pointer to an empty linked list.
-        // (2) Check the first value of both linked lists.
-        // (3) Whichever node from L1 or L2 is smaller, append it to the new list and move the pointer to the next node.
-        // (4) Continue this process until you reach the end of a linked list.
-
-//        LinkedList<T> new_list = LinkedList<T>();
         ListNode<T> *node1 = list1.get_first();
         ListNode<T> *node2 = list2.get_first();
         ListNode<T> *new_node;

@@ -13,7 +13,7 @@ Team::Team(int team_id, int points):
         games_played(0),
         players(),
         players_score(),
-        players_list()
+        top_scorer()
 {}
 
 bool Team::is_empty() {
@@ -37,19 +37,15 @@ void Team::add_games_played(int games){
 }
 
 int Team::get_players_count() {
-    return players.get_nodes_count();
+    return players.get_node_count();
 }
 
-int Team::get_strength() { //TODO: what is it for?
+int Team::get_strength() {
     return points + total_goals - total_cards;
 }
 
 int Team::get_points() {
     return points;
-}
-
-int Team::get_goalkeepers(){
-    return goalkeepers;
 }
 
 void Team::add_goalkeeper(int goalkeeper) {
@@ -58,6 +54,18 @@ void Team::add_goalkeeper(int goalkeeper) {
 
 bool Team::has_goalkeeper() {
     return goalkeepers > 0;
+}
+
+int Team::get_goalkeepers() {
+    return goalkeepers;
+}
+
+int Team::get_goals() {
+    return total_goals;
+}
+
+int Team::get_cards() {
+    return total_cards;
 }
 
 void Team::add_total_goals(int goals) {
@@ -70,6 +78,21 @@ void Team::add_total_cards(int cards) {
 
 AVLTree<int, shared_ptr<Player>>& Team::get_players() {
     return players;
+}
+
+shared_ptr<Node<Stats,shared_ptr<Player>>> Team::get_top_scorer() {
+    return top_scorer;
+}
+
+void Team::set_top_scorer(shared_ptr<Node<Stats,shared_ptr<Player>>> new_top_scorer) {
+    this->top_scorer = new_top_scorer;
+}
+
+void Team::set_players(AVLTree<int,shared_ptr<Player>>& new_players) {
+    this->players = new_players;
+}
+void Team::set_players_score(AVLTree<Stats,shared_ptr<Player>>& new_players_score) {
+    this->players_score = new_players_score;
 }
 
 AVLTree<Stats, shared_ptr<Player>>& Team::get_players_score() {

@@ -22,4 +22,18 @@ public:
     }
 };
 
+class EmptyList : public std::exception {
+public:
+    const char * what () const noexcept override {
+        return "Empty List";
+    }
+};
+
+class EmptyTree : public std::exception {
+public:
+    const char * what () const noexcept override {
+        return "Empty Tree";
+    }
+};
+
 #endif //WORLDCUP_EXCEPTION_H

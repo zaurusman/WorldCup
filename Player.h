@@ -50,6 +50,8 @@ public:
 
     void set_games_not_played(int games_not_played);
 
+    void set_games_played(int games_played);
+
     void set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>*);
 
     void set_team_player_node(ListNode<Node<Stats,shared_ptr<Player>>>*);

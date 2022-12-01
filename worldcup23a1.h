@@ -22,6 +22,7 @@
 #include "Stats.h"
 #include "LinkedList.h"
 #include <memory>
+#include <cmath>
 #include <exception>
 
 using namespace std;

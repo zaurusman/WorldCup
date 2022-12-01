@@ -24,7 +24,7 @@ private:
     int games_played;
     AVLTree<int, shared_ptr<Player>> players;
     AVLTree<Stats, shared_ptr<Player>> players_score;
-    LinkedList<Node<Stats,shared_ptr<Player>>> players_list;
+    shared_ptr<Node<Stats,shared_ptr<Player>>> top_scorer;
 
 public:
     Team() = default;
@@ -36,8 +36,6 @@ public:
 
     int get_id();
 
-    int get_team_power();
-
     int get_games_played();
 
     void add_games_played(int games);
@@ -48,19 +46,29 @@ public:
 
     int get_points();
 
-    LinkedList<Node<Stats,shared_ptr<Player>>>& get_players_list();
-
-    int get_goalkeepers();
-
     void add_goalkeeper(int goalkeeper);
 
     bool has_goalkeeper();
+
+    int get_goalkeepers();
 
     void add_total_goals(int goals);
 
     void add_total_cards(int cards);
 
+    int get_goals();
+
+    int get_cards();
+
     AVLTree<int, shared_ptr<Player>>& get_players();
+
+    shared_ptr<Node<Stats,shared_ptr<Player>>> get_top_scorer();
+
+    void set_top_scorer(shared_ptr<Node<Stats,shared_ptr<Player>>> top_scorer);
+
+    void set_players(AVLTree<int,shared_ptr<Player>>& players);
+
+    void set_players_score(AVLTree<Stats,shared_ptr<Player>>& players_score);
 
     AVLTree<Stats, shared_ptr<Player>>& get_players_score();
 
