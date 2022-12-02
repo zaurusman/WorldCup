@@ -4,7 +4,7 @@
 
 #include "Player.h"
 
-Player::Player(int id, shared_ptr<Team>& team, int games_played, int goals, int cards, bool goalkeeper):
+Player::Player(int id, Team* team, int games_played, int goals, int cards, bool goalkeeper):
     id(id),
     team(team),
     games_played(games_played),
@@ -64,6 +64,6 @@ void Player::set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>* node
     all_players_node = node;
 }
 
-shared_ptr<Team>& Player::get_team() {
+Team* Player::get_team() {
     return team;
 }

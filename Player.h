@@ -13,7 +13,7 @@ class Stats;
 
 class Player {
     int id;
-    shared_ptr<Team> team;
+    Team *team;
     int games_played;
     int goals;
     int cards;
@@ -23,7 +23,7 @@ class Player {
     friend class Stats;
 
 public:
-    Player(int id, shared_ptr<Team>& team, int games_played, int goals, int cards, bool goalkeeper);
+    Player(int id, Team* team, int games_played, int goals, int cards, bool goalkeeper);
 
     ~Player() = default;
 
@@ -53,7 +53,7 @@ public:
 
     void set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>*);
 
-    shared_ptr<Team>& get_team();
+    Team* get_team();
 };
 
 

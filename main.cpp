@@ -7,7 +7,7 @@
 #include "AVLTree.h"
 #include "LinkedList.h"
 
-int main2() {
+int main4() {
     world_cup_t my_wc;
     my_wc.add_team(111, 50);
     my_wc.add_team(222, 50);

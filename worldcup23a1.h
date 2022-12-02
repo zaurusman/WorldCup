@@ -39,8 +39,8 @@ public: //private:
     static const int WINNER_POINTS = 3;
     static const int DRAW_POINTS = 1;
 
-    void remove_player_aux(shared_ptr<Player>& player_to_remove,shared_ptr<Team>& his_team,int playerId);
-    void add_player_to_team(int gamesPlayed,int goals, int cards,int playerId,shared_ptr<Team>& his_team, bool goalKeeper);
+    void remove_player_aux(shared_ptr<Player>& player_to_remove,Team* his_team,int playerId);
+    void add_player_to_team(int gamesPlayed,int goals, int cards,int playerId,Team* his_team, bool goalKeeper);
 
 public:
     // <DO-NOT-MODIFY> {

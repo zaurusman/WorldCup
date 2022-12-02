@@ -52,7 +52,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
 
     try {
         shared_ptr<Team> his_team = teams.find(teamId)->info;
-        add_player_to_team(gamesPlayed,goals,cards, playerId, his_team, goalKeeper);
+        add_player_to_team(gamesPlayed,goals,cards, playerId, &*his_team, goalKeeper);
         if (his_team->get_players_count() >= VALID_SIZE && his_team->has_goalkeeper() &&
             !valid_teams.does_exist(teamId)) {
             valid_teams.insert(teamId, his_team);
@@ -63,7 +63,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     }
 }
 
-void world_cup_t::add_player_to_team(int gamesPlayed,int goals, int cards,int playerId,shared_ptr<Team>& his_team, bool goalKeeper) {
+void world_cup_t::add_player_to_team(int gamesPlayed,int goals, int cards,int playerId,Team* his_team, bool goalKeeper) {
     shared_ptr<Player> to_add = make_shared<Player>(playerId, his_team, gamesPlayed, goals, cards, goalKeeper);
     Stats stats_to_add(*to_add);
     int added_goals = to_add->get_goals();
@@ -108,8 +108,8 @@ StatusType world_cup_t::remove_player(int playerId) {
     }
     try {
         shared_ptr<Player> player_to_remove = all_players.find(playerId)->info;
-        shared_ptr<Team> his_team = player_to_remove->get_team();
-        remove_player_aux(player_to_remove,his_team,playerId);
+        Team* his_team = player_to_remove->get_team();
+        remove_player_aux(player_to_remove,his_team, playerId);
         if ((his_team->get_players_count() < VALID_SIZE || !his_team->has_goalkeeper()) && valid_teams.does_exist(his_team->get_id())) {
             valid_teams.remove(his_team->get_id());
         }
@@ -123,7 +123,7 @@ StatusType world_cup_t::remove_player(int playerId) {
     return StatusType::SUCCESS;
 }
 
-void world_cup_t::remove_player_aux(shared_ptr<Player>& player_to_remove,shared_ptr<Team>& his_team,int playerId) {
+void world_cup_t::remove_player_aux(shared_ptr<Player>& player_to_remove,Team* his_team,int playerId) {
     Stats stats_to_remove(*player_to_remove);
     int removed_goals = player_to_remove->get_goals();
     int removed_cards = player_to_remove->get_cards();
