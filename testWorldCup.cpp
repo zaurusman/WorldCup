@@ -434,7 +434,7 @@ bool test_knockout_winner_invalid_input() {
 
 bool test_knockout_winner_none_in_range() {
     world_cup_t my_wc;
-    my_wc.add_team(111, 50);
+    my_wc.add_team(111, 80);
     my_wc.add_player(1, 111, 0, 0, 0, false);
     my_wc.add_player(2, 111, 0, 0, 0, false);
     my_wc.add_player(3, 111, 0, 0, 0, false);
@@ -446,8 +446,49 @@ bool test_knockout_winner_none_in_range() {
     my_wc.add_player(9, 111, 0, 0, 0, false);
     my_wc.add_player(10, 111, 0, 0, 0, false);
     my_wc.add_player(11, 111, 0, 0, 0, true);
-    StatusType s1 = my_wc.knockout_winner(50, 100).status();
-    return s1 == StatusType::FAILURE;
+
+    my_wc.add_team(17, 50);
+    my_wc.add_player(80, 17, 0, 0, 0, false);
+    my_wc.add_player(12, 17, 0, 0, 0, false);
+    my_wc.add_player(13, 17, 0, 0, 0, false);
+    my_wc.add_player(14, 17, 0, 0, 0, false);
+    my_wc.add_player(15, 17, 0, 0, 0, false);
+    my_wc.add_player(16, 17, 0, 0, 0, false);
+    my_wc.add_player(17, 17, 0, 0, 0, false);
+    my_wc.add_player(18, 17, 0, 0, 0, false);
+    my_wc.add_player(19, 17, 0, 0, 0, false);
+    my_wc.add_player(110, 17, 0, 0, 0, false);
+    my_wc.add_player(111, 17, 0, 0, 0, true);
+
+    my_wc.add_team(13, 50);
+    my_wc.add_player(91, 13, 0, 0, 0, false);
+    my_wc.add_player(92, 13, 0, 0, 0, false);
+    my_wc.add_player(93, 13, 0, 0, 0, false);
+    my_wc.add_player(94, 13, 0, 0, 0, false);
+    my_wc.add_player(95, 13, 0, 0, 0, false);
+    my_wc.add_player(96, 13, 0, 0, 0, false);
+    my_wc.add_player(97, 13, 0, 0, 0, false);
+    my_wc.add_player(98, 13, 0, 0, 0, false);
+    my_wc.add_player(99, 13, 0, 0, 0, false);
+    my_wc.add_player(100, 13, 0, 0, 0, false);
+    my_wc.add_player(101, 13, 0, 0, 0, true);
+
+    my_wc.add_team(1000, 1);
+    my_wc.add_player(71, 1000, 0, 0, 0, false);
+    my_wc.add_player(72, 1000, 0, 0, 0, false);
+    my_wc.add_player(73, 1000, 0, 0, 0, false);
+    my_wc.add_player(74, 1000, 0, 0, 0, false);
+    my_wc.add_player(75, 1000, 0, 0, 0, false);
+    my_wc.add_player(76, 1000, 0, 0, 0, false);
+    my_wc.add_player(77, 1000, 0, 0, 0, false);
+    my_wc.add_player(78, 1000, 0, 0, 0, false);
+    my_wc.add_player(79, 1000, 0, 0, 0, false);
+    my_wc.add_player(700, 1000, 0, 0, 0, false);
+    my_wc.add_player(701, 1000, 0, 0, 0, true);
+
+    StatusType s1 = my_wc.knockout_winner(1, 10).status();
+    StatusType s2 = my_wc.knockout_winner(2001, 3999).status();
+    return s1 == StatusType::FAILURE && s2 == StatusType::FAILURE;
 }
 
 void test_knockout_winner() {

@@ -389,15 +389,15 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
 
     LinkedList<Node<int, shared_ptr<Team>>> valid_nodes;
     LinkedList<Node<int, int>> tourney;
-    AVLTree<int, shared_ptr<Team>>::AVL_to_list_inorder(valid_teams.get_root(), valid_nodes);
+    AVLTree<int, shared_ptr<Team>>::AVL_to_list_inorder_inrange(valid_teams.get_root(), valid_nodes, minTeamId, maxTeamId);
     ListNode<Node<int, shared_ptr<Team>>>* curr_team = valid_nodes.get_first();
     ListNode<Node<int, int>>* team1;
     ListNode<Node<int, int>>* team2;
 
-    while (curr_team && curr_team->data.info->get_id() < minTeamId) {
-        curr_team = curr_team->next;
-    }
-    if (!curr_team || curr_team->data.info->get_id() > maxTeamId) { // no teams in given range
+//    while (curr_team && curr_team->data.info->get_id() < minTeamId) {
+//        curr_team = curr_team->next;
+//    }
+    if (!curr_team) { // no teams in given range
         return StatusType::FAILURE;
     }
 

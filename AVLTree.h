@@ -99,6 +99,7 @@ public:
         return find_rec(root,key);
     }
 
+
     static void AVL_to_list_inorder(shared_ptr<Node<Key,Info>>& root,LinkedList<Node<Key,Info>>& out) {
         if(!root) {
             return;
@@ -108,11 +109,29 @@ public:
         AVL_to_list_inorder(root->left,out);
     }
 
+    static void AVL_to_list_inorder_inrange(shared_ptr<Node<Key,Info>>& root,LinkedList<Node<Key,Info>>& out, Key& minKey, Key& maxKey) {
+        if(!root) {
+            return;
+        }
+
+        if (root->key < maxKey) {
+            AVL_to_list_inorder_inrange(root->right,out, minKey, maxKey);
+        }
+        if (root->key >= minKey && root->key <= maxKey) {
+            out.push_front(*root);
+        }
+        if (root->key > minKey) {
+            AVL_to_list_inorder_inrange(root->left,out, minKey, maxKey);
+        }
+    }
+
     static AVLTree<Key,Info> make_complete_tree(int tree_height) {
         AVLTree<Key,Info> tree;
         make_complete_tree_rec(tree, tree.get_root(), tree_height);
         return tree;
     }
+
+
 
     static void make_complete_tree_rec(AVLTree<Key,Info>& tree, shared_ptr<Node<Key,Info>>& node, int tree_height) {
         if (tree_height == -1) {
@@ -364,6 +383,7 @@ private:
         }
     }
 
+
     static shared_ptr<Node<Key,Info>> find_parent_rec(shared_ptr<Node<Key,Info>>& root,Key& key, shared_ptr<Node<Key, Info>> parent){
         if(!root){
             throw KeyDoesNotExist();
@@ -388,9 +408,6 @@ private:
         std::cout << (curr->key) << ", ";
         print_inorder(curr->right);
     }
-
-  //TODO: tree creator with while, int nodes_count, int state. - notice: do not change root. left side first.
-
 };
 
 #endif //WORLDCUP_AVLTREE_H
