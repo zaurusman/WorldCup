@@ -58,7 +58,11 @@ bool Stats::is_next_closer(Stats prev, Stats next) {
         return true;
     } else if (abs(*cards - *next.cards) > abs(*prev.cards - *cards)) {
         return false;
-    } if (*next.player_id - *player_id <= *player_id - *prev.player_id) {
+    } if (abs(*next.player_id - *player_id) < abs(*player_id - *prev.player_id)) {
+        return true;
+    } else if (abs(*next.player_id - *player_id) > abs(*player_id - *prev.player_id)) {
+        return false;
+    } else if (*next.player_id > *prev.player_id) {
         return true;
     } else {
         return false;
