@@ -30,6 +30,9 @@ StatusType world_cup_t::remove_team(int teamId) {
     try {
         if (teams.find(teamId)->info->get_players().get_node_count() == 0 && teams.find(teamId)->info->get_players_score().get_node_count() == 0) {
             teams.remove(teamId);
+            if (valid_teams.does_exist(teamId)) {
+                valid_teams.remove(teamId);
+            }
             return StatusType::SUCCESS;
         }
     } catch (const KeyDoesNotExist &e) {
@@ -53,8 +56,7 @@ StatusType world_cup_t::add_player(int playerId, int teamId, int gamesPlayed,
     try {
         shared_ptr<Team> his_team = teams.find(teamId)->info;
         add_player_to_team(gamesPlayed,goals,cards, playerId, &*his_team, goalKeeper);
-        if (his_team->get_players_count() >= VALID_SIZE && his_team->has_goalkeeper() &&
-            !valid_teams.does_exist(teamId)) {
+        if (his_team->get_players_count() >= VALID_SIZE && his_team->has_goalkeeper() && !valid_teams.does_exist(teamId)) {
             valid_teams.insert(teamId, his_team);
         }
         return StatusType::SUCCESS;
@@ -263,6 +265,10 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     new_team->add_total_goals(team1->info->get_goals() + team2->info->get_goals());
     new_team->add_total_cards(team1->info->get_cards() + team2->info->get_cards());
     new_team->set_top_scorer(new_team->get_players_score().get_max());
+
+    if (new_team->get_players_count() >= VALID_SIZE && new_team->has_goalkeeper() && !valid_teams.does_exist(newTeamId)) {
+        valid_teams.insert(newTeamId, new_team);
+    }
 
     return StatusType::SUCCESS;
 }
