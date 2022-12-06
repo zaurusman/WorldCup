@@ -246,6 +246,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     while (temp_player) {
         temp_player->data.info->set_games_played(temp_player->data.info->get_games_played());
         temp_player->data.info->set_team(&*new_team);
+        temp_player->data.info->set_games_not_played(0);
         temp_player = temp_player->next;
     }
 
