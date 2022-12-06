@@ -28,12 +28,11 @@
 using namespace std;
 
 class world_cup_t {
-public: //private:
+private:
     AVLTree<int, shared_ptr<Team>> teams;
     AVLTree<int, shared_ptr<Team>> valid_teams;
     AVLTree<int, shared_ptr<Player>> all_players;
     AVLTree<Stats, shared_ptr<Player>> all_players_score;
-    shared_ptr<Player> top_scorer;
     LinkedList<Node<Stats,shared_ptr<Player>>> players_list;
     static const int VALID_SIZE = 11;
     static const int WINNER_POINTS = 3;

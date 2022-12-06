@@ -232,17 +232,13 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     LinkedList<Node<Stats,shared_ptr<Player>>> players_score1;
     LinkedList<Node<Stats,shared_ptr<Player>>> players_score2;
     LinkedList<Node<Stats,shared_ptr<Player>>> players_score_merged;
-    LinkedList<Node<Stats,shared_ptr<Player>>> players_score_merge2;
     AVLTree<int,shared_ptr<Player>>::AVL_to_list_inorder(team1->info->get_players().get_root(), players_list1);
     AVLTree<int,shared_ptr<Player>>::AVL_to_list_inorder(team2->info->get_players().get_root(), players_list2);
     AVLTree<Stats,shared_ptr<Player>>::AVL_to_list_inorder(team1->info->get_players_score().get_root(), players_score1);
     AVLTree<Stats,shared_ptr<Player>>::AVL_to_list_inorder(team2->info->get_players_score().get_root(), players_score2);
 
     LinkedList<Node<int,shared_ptr<Player>>>::merge_sorted(players_list1, players_list2, players_list_merged);
-
     LinkedList<Node<Stats,shared_ptr<Player>>>::merge_sorted(players_score1, players_score2, players_score_merged);
-    LinkedList<Node<Stats,shared_ptr<Player>>>::merge_sorted(players_score1, players_score2, players_score_merge2);
-
     ListNode<Node<int,shared_ptr<Player>>>* temp_player = players_list_merged.get_first();
     while (temp_player) {
         temp_player->data.info->set_games_played(temp_player->data.info->get_games_played());
@@ -325,6 +321,10 @@ StatusType world_cup_t::get_all_players(int teamId, int *const output) {
         }
     }
     //teamId<0
+    if (all_players.get_node_count() == 0) {
+        return StatusType::FAILURE;
+    }
+    
     LinkedList<Node<Stats, shared_ptr<Player>>> list;
     AVLTree<Stats, shared_ptr<Player>>::AVL_to_list_inorder(all_players_score.get_root(), list);
     ListNode<Node<Stats, shared_ptr<Player>>> *node = list.get_first();
