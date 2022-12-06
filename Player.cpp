@@ -67,3 +67,7 @@ void Player::set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>* node
 Team* Player::get_team() {
     return team;
 }
+
+void Player::set_team(Team* new_team) {
+    team = new_team;
+}

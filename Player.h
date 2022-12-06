@@ -54,6 +54,8 @@ public:
     void set_all_players_node(ListNode<Node<Stats,shared_ptr<Player>>>*);
 
     Team* get_team();
+
+    void set_team(Team*);
 };
 
 

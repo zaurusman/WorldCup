@@ -242,8 +242,10 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     LinkedList<Node<int,shared_ptr<Player>>>::merge_sorted(players_list1, players_list2, players_list_merged);
     LinkedList<Node<Stats,shared_ptr<Player>>>::merge_sorted(players_score1, players_score2, players_score_merged);
     ListNode<Node<int,shared_ptr<Player>>>* temp_player = players_list_merged.get_first();
+    shared_ptr<Team> new_team = make_shared<Team>(newTeamId, (teams.find(teamId1)->info->get_points() + teams.find(teamId2)->info->get_points()));
     while (temp_player) {
         temp_player->data.info->set_games_played(temp_player->data.info->get_games_played());
+        temp_player->data.info->set_team(&*new_team);
         temp_player = temp_player->next;
     }
 
@@ -254,7 +256,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     AVLTree<Stats,shared_ptr<Player>>::fill_empty_tree(united_players_score.get_root(), players_score_merged);
     team1->info->empty_players();
     team2->info->empty_players();
-    shared_ptr<Team> new_team = make_shared<Team>(newTeamId, (teams.find(teamId1)->info->get_points() + teams.find(teamId2)->info->get_points()));
+
     remove_team(teamId1);
     remove_team(teamId2);
 
