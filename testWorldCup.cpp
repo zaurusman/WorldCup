@@ -414,7 +414,7 @@ bool test_knockout_winner_large_group() {
     my_wc.add_player(84, 1001, 0, 0, 0, false);
     my_wc.add_player(85, 1001, 0, 0, 0, false);
     my_wc.add_player(86, 1001, 0, 0, 0, false);
-    my_wc.add_player(87, 1001, 1, 50, 190, false);
+    my_wc.add_player(87, 1001, 1, 50, 200, false);
     my_wc.add_player(88, 1001, 0, 0, 0, false);
     my_wc.add_player(89, 1001, 0, 0, 0, false);
     my_wc.add_player(800, 1001, 0, 0, 0, false);
@@ -445,7 +445,12 @@ bool test_knockout_winner_large_group() {
     my_wc.add_player(1009, 1003, 0, 0, 0, false);
     my_wc.add_player(10000, 1003, 0, 0, 0, false);
     my_wc.add_player(10001, 1003, 0, 0, 0, true);
-    my_wc.unite_teams(1001,17,18);//new team strength = -90
+    my_wc.unite_teams(1001,17,18);//new team strength = -100 V
+    my_wc.remove_player(87);// worth -150 new value = 50
+    my_wc.add_player(2344,18,1,40,90,true); //new val = 0
+    my_wc.update_player_stats(2344,2,60,10); //50
+    my_wc.play_match(18,1003);
+
 
 
     return my_wc.knockout_winner(10, 1004).ans() == 111;
@@ -754,7 +759,7 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_unite_teams);
 }
 
-int main7() {
+int main() {
     RUN_TEST_GROUP(test_world_cup);
     return 0;
 }

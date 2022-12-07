@@ -158,8 +158,8 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         to_update->add_goals(scoredGoals);
         to_update->add_cards(cardsReceived);
         add_player_to_team(to_update->get_games_played(),to_update->get_goals(),to_update->get_cards(),to_update->get_id(),to_update->get_team(),to_update->is_goalkeeper());
-        to_update->get_team()->add_total_goals(scoredGoals);
-        to_update->get_team()->add_total_cards(cardsReceived);
+        //to_update->get_team()->add_total_goals(scoredGoals);
+        //to_update->get_team()->add_total_cards(cardsReceived);
 
     } catch (KeyDoesNotExist &e) {
         return StatusType::FAILURE;
@@ -258,7 +258,6 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
 
     new_team->set_players(united_players);
     new_team->set_players_score(united_players_score);
-    teams.insert(newTeamId, new_team);
     new_team->add_goalkeeper(team1->info->get_goalkeepers() + team2->info->get_goalkeepers());
     new_team->add_total_goals(team1->info->get_goals() + team2->info->get_goals());
     new_team->add_total_cards(team1->info->get_cards() + team2->info->get_cards());
@@ -273,7 +272,7 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
 
     remove_team(teamId1);
     remove_team(teamId2);
-
+    teams.insert(newTeamId, new_team);
 
     return StatusType::SUCCESS;
 }
@@ -419,6 +418,7 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
     while (tourney.get_first()->next) {
         team1 = tourney.get_first();
         while (team1 && team1->next) {
+            team2 = team1->next;
             team2 = team1->next;
             int first_strength = team1->data.info;
             int second_strength = team2->data.info;
