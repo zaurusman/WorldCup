@@ -255,11 +255,6 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
 
     AVLTree<int,shared_ptr<Player>>::fill_empty_tree(united_players.get_root(), players_list_merged);
     AVLTree<Stats,shared_ptr<Player>>::fill_empty_tree(united_players_score.get_root(), players_score_merged);
-    team1->info->empty_players();
-    team2->info->empty_players();
-
-    remove_team(teamId1);
-    remove_team(teamId2);
 
     new_team->set_players(united_players);
     new_team->set_players_score(united_players_score);
@@ -272,6 +267,13 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     if (new_team->get_players_count() >= VALID_SIZE && new_team->has_goalkeeper() && !valid_teams.does_exist(newTeamId)) {
         valid_teams.insert(newTeamId, new_team);
     }
+
+    team1->info->empty_players();
+    team2->info->empty_players();
+
+    remove_team(teamId1);
+    remove_team(teamId2);
+
 
     return StatusType::SUCCESS;
 }
@@ -403,9 +405,6 @@ output_t<int> world_cup_t::knockout_winner(int minTeamId, int maxTeamId) {
     ListNode<Node<int, int>>* team1;
     ListNode<Node<int, int>>* team2;
 
-//    while (curr_team && curr_team->data.info->get_id() < minTeamId) {
-//        curr_team = curr_team->next;
-//    }
     if (!curr_team) { // no teams in given range
         return StatusType::FAILURE;
     }

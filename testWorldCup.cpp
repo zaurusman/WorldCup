@@ -353,6 +353,103 @@ void test_play_match() {
     RUN_TEST(test_play_match_tie);
     RUN_TEST(test_play_match_invalid_input);
 }
+bool test_knockout_winner_large_group() {
+    world_cup_t my_wc;
+    my_wc.add_team(111, 80);
+    my_wc.add_player(1, 111, 0, 0, 0, false);
+    my_wc.add_player(2, 111, 0, 0, 0, false);
+    my_wc.add_player(3, 111, 0, 0, 0, false);
+    my_wc.add_player(4, 111, 0, 0, 0, false);
+    my_wc.add_player(5, 111, 0, 0, 0, false);
+    my_wc.add_player(6, 111, 1, 100, 0, false);
+    my_wc.add_player(7, 111, 0, 0, 0, false);
+    my_wc.add_player(8, 111, 0, 0, 0, false);
+    my_wc.add_player(9, 111, 0, 0, 0, false);
+    my_wc.add_player(10, 111, 0, 0, 0, false);
+    my_wc.add_player(11, 111, 0, 0, 0, true);
+
+    my_wc.add_team(17, 50);
+    my_wc.add_player(80, 17, 0, 0, 0, false);
+    my_wc.add_player(12, 17, 0, 0, 0, false);
+    my_wc.add_player(13, 17, 0, 0, 0, false);
+    my_wc.add_player(14, 17, 0, 0, 0, false);
+    my_wc.add_player(15, 17, 0, 0, 0, false);
+    my_wc.add_player(16, 17, 0, 0, 0, false);
+    my_wc.add_player(17, 17, 0, 0, 0, false);
+    my_wc.add_player(18, 17, 0, 0, 0, false);
+    my_wc.add_player(19, 17, 0, 0, 0, false);
+    my_wc.add_player(110, 17, 0, 0, 0, false);
+    my_wc.add_player(111, 17, 0, 0, 0, true);
+
+    my_wc.add_team(13, 50);
+    my_wc.add_player(91, 13, 0, 0, 0, false);
+    my_wc.add_player(92, 13, 0, 0, 0, false);
+    my_wc.add_player(93, 13, 0, 0, 0, false);
+    my_wc.add_player(94, 13, 0, 0, 0, false);
+    my_wc.add_player(95, 13, 0, 0, 0, false);
+    my_wc.add_player(96, 13, 0, 0, 0, false);
+    my_wc.add_player(97, 13, 0, 0, 0, false);
+    my_wc.add_player(98, 13, 0, 0, 0, false);
+    my_wc.add_player(99, 13, 0, 0, 0, false);
+    my_wc.add_player(100, 13, 0, 0, 0, false);
+    my_wc.add_player(101, 13, 0, 0, 0, true);
+
+    my_wc.add_team(1000, 1);
+    my_wc.add_player(71, 1000, 0, 0, 0, false);
+    my_wc.add_player(72, 1000, 0, 0, 0, false);
+    my_wc.add_player(73, 1000, 0, 0, 0, false);
+    my_wc.add_player(74, 1000, 1, 20, 0, false);
+    my_wc.add_player(75, 1000, 0, 0, 0, false);
+    my_wc.add_player(76, 1000, 0, 0, 0, false);
+    my_wc.add_player(77, 1000, 0, 0, 0, false);
+    my_wc.add_player(78, 1000, 0, 0, 0, false);
+    my_wc.add_player(79, 1000, 0, 0, 0, false);
+    my_wc.add_player(700, 1000, 0, 0, 0, false);
+    my_wc.add_player(701, 1000, 0, 0, 0, true);
+
+    my_wc.add_team(1001, 0);
+    my_wc.add_player(81, 1001, 0, 0, 0, false);
+    my_wc.add_player(82, 1001, 0, 0, 0, false);
+    my_wc.add_player(83, 1001, 0, 0, 0, false);
+    my_wc.add_player(84, 1001, 0, 0, 0, false);
+    my_wc.add_player(85, 1001, 0, 0, 0, false);
+    my_wc.add_player(86, 1001, 0, 0, 0, false);
+    my_wc.add_player(87, 1001, 1, 50, 190, false);
+    my_wc.add_player(88, 1001, 0, 0, 0, false);
+    my_wc.add_player(89, 1001, 0, 0, 0, false);
+    my_wc.add_player(800, 1001, 0, 0, 0, false);
+    my_wc.add_player(801, 1001, 0, 0, 0, true);
+
+    my_wc.add_team(1002, 1);
+    my_wc.add_player(891, 1002, 0, 0, 0, false);
+    my_wc.add_player(892, 1002, 0, 0, 0, false);
+    my_wc.add_player(893, 1002, 0, 0, 0, false);
+    my_wc.add_player(894, 1002, 0, 0, 0, false);
+    my_wc.add_player(895, 1002, 1, 5, 0, false);
+    my_wc.add_player(896, 1002, 0, 0, 0, false);
+    my_wc.add_player(897, 1002, 1, 50, 0, false);
+    my_wc.add_player(898, 1002, 0, 0, 0, false);
+    my_wc.add_player(899, 1002, 0, 0, 0, false);
+    my_wc.add_player(8900, 1002, 0, 0, 0, false);
+    my_wc.add_player(8901, 1002, 0, 0, 0, true);
+
+    my_wc.add_team(1003, 1);
+    my_wc.add_player(1001, 1003, 0, 0, 0, false);
+    my_wc.add_player(1002, 1003, 0, 0, 0, false);
+    my_wc.add_player(1003, 1003, 0, 0, 0, false);
+    my_wc.add_player(1004, 1003, 0, 0, 0, false);
+    my_wc.add_player(1005, 1003, 0, 0, 0, false);
+    my_wc.add_player(1006, 1003, 0, 0, 0, false);
+    my_wc.add_player(1007, 1003, 1, 50, 0, false);
+    my_wc.add_player(1008, 1003, 0, 0, 0, false);
+    my_wc.add_player(1009, 1003, 0, 0, 0, false);
+    my_wc.add_player(10000, 1003, 0, 0, 0, false);
+    my_wc.add_player(10001, 1003, 0, 0, 0, true);
+    my_wc.unite_teams(1001,17,18);//new team strength = -90
+
+
+    return my_wc.knockout_winner(10, 1004).ans() == 111;
+}
 
 bool test_knockout_winner_win_by_id() {
     world_cup_t my_wc;
@@ -495,6 +592,7 @@ void test_knockout_winner() {
     RUN_TEST(test_knockout_winner_win_by_id);
     RUN_TEST(test_knockout_winner_invalid_input);
     RUN_TEST(test_knockout_winner_none_in_range);
+    RUN_TEST(test_knockout_winner_large_group);
 }
 
 bool test_get_closest_valid() {
@@ -656,7 +754,7 @@ void test_world_cup() {
     RUN_TEST_GROUP(test_unite_teams);
 }
 
-int main3() {
+int main7() {
     RUN_TEST_GROUP(test_world_cup);
     return 0;
 }

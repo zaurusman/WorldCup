@@ -97,6 +97,7 @@ public:
             first = to_insert;
         }
         last = to_insert;
+        number_of_nodes++;
     }
 
     ListNode<T> *insert_after(ListNode<T> *before, const T& node) {
