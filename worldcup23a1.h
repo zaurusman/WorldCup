@@ -28,7 +28,7 @@
 using namespace std;
 
 class world_cup_t {
-public://private:
+private:
     AVLTree<int, shared_ptr<Team>> teams;
     AVLTree<int, shared_ptr<Team>> valid_teams;
     AVLTree<int, shared_ptr<Player>> all_players;
