@@ -158,8 +158,6 @@ StatusType world_cup_t::update_player_stats(int playerId, int gamesPlayed,
         to_update->add_goals(scoredGoals);
         to_update->add_cards(cardsReceived);
         add_player_to_team(to_update->get_games_played(),to_update->get_goals(),to_update->get_cards(),to_update->get_id(),to_update->get_team(),to_update->is_goalkeeper());
-        //to_update->get_team()->add_total_goals(scoredGoals);
-        //to_update->get_team()->add_total_cards(cardsReceived);
 
     } catch (KeyDoesNotExist &e) {
         return StatusType::FAILURE;
@@ -263,15 +261,16 @@ StatusType world_cup_t::unite_teams(int teamId1, int teamId2, int newTeamId) {
     new_team->add_total_cards(team1->info->get_cards() + team2->info->get_cards());
     new_team->set_top_scorer(new_team->get_players_score().get_max());
 
-    if (new_team->get_players_count() >= VALID_SIZE && new_team->has_goalkeeper() && !valid_teams.does_exist(newTeamId)) {
-        valid_teams.insert(newTeamId, new_team);
-    }
-
     team1->info->empty_players();
     team2->info->empty_players();
 
     remove_team(teamId1);
     remove_team(teamId2);
+
+    if (new_team->get_players_count() >= VALID_SIZE && new_team->has_goalkeeper() && !valid_teams.does_exist(newTeamId)) {
+        valid_teams.insert(newTeamId, new_team);
+    }
+
     teams.insert(newTeamId, new_team);
 
     return StatusType::SUCCESS;
